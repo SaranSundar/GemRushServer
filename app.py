@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from random import shuffle
 
@@ -16,9 +17,20 @@ from utils.utils import generate_uid
 redis_app = get_redis_app()
 app = Flask(__name__)
 
+if __name__ != '__main__':
+    # https://trstringer.com/logging-flask-gunicorn-the-manageable-way/
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
+
 
 @app.route('/')
 def hello():
+    # application.logger.debug('this is a DEBUG message')
+    # application.logger.info('this is an INFO message')
+    # application.logger.warning('this is a WARNING message')
+    # application.logger.error('this is an ERROR message')
+    # application.logger.critical('this is a CRITICAL message')
     redis_app.incr('hits')
     return 'This Compose/Flask demo has been viewed %s time(s).' % redis_app.read('hits')
 
@@ -47,6 +59,8 @@ def hello():
 def create_room():
     create_room_request = CreateRoomRequest(**request.json)
     room: Room = Room.request_to_dto(create_room_request)
+    app.logger.debug('Room value in create-room is')
+    app.logger.debug(room)
     save_room(room)
     print(room.id)
     return jsonify(room)
@@ -54,17 +68,20 @@ def create_room():
 
 @app.route('/get-room/<room_id>', methods=['GET'])
 def get_room_json(room_id):
-    return jsonify(get_room(room_id))
+    room = get_room(room_id)
+    app.logger.debug('Room value in get-room is')
+    app.logger.debug(room)
+    return jsonify(room)
 
 
-def save_room(room: Room) -> Room:
+def save_room(room: Room):
     key = RedisPaths.create_key([RedisPaths.ROOMS, room.id])
     redis_app.write(key, room)
 
 
 def get_room(room_id) -> Room:
     key = RedisPaths.create_key([RedisPaths.ROOMS, room_id])
-    return redis_app.read(key)
+    return redis_app.read(key, class_type=Room)
 
 
 @app.route('/join-room/<room_id>', methods=['POST'])
@@ -72,6 +89,8 @@ def join_room(room_id):
     join_room_request = JoinRoomRequest(**request.json)
     room = get_room(room_id)
     room.join(join_room_request.player_id, join_room_request.password)
+    app.logger.debug('Room value in join-room is')
+    app.logger.debug(room)
     save_room(room)
 
 
@@ -113,4 +132,4 @@ def get_game_state():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True, port=9375)
+    app.run(host="0.0.0.0", debug=True)

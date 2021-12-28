@@ -4,15 +4,11 @@ from dataclasses import dataclass
 from random import shuffle
 from typing import Dict, List
 
-from serde import deserialize, serialize
-
 from card.card_data import Tier, Card
 from card.color import CardColor, TokenColor
 from card.noble import Noble
 
 
-@deserialize
-@serialize
 @dataclass
 class Deck:
     tiered_cards: Dict[Tier, List[Card]]

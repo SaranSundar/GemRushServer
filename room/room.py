@@ -2,15 +2,11 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import List
 
-from serde import serialize, deserialize
-
 from json_requests.create_room_request import CreateRoomRequest
 from player.player import Player
 from utils.utils import generate_uid
 
 
-@deserialize
-@serialize
 @dataclass
 class Room:
     id: str
