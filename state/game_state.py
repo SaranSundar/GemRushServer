@@ -1,4 +1,3 @@
-from dataclasses import field
 from datetime import datetime
 from typing import List, Dict
 
@@ -8,7 +7,7 @@ from card.deck import Deck
 from player.player import Player, PlayerState
 
 
-@dataclass(eq=True, frozen=True)
+@dataclass
 class GameState:
     id: str
     player_states: Dict[str, PlayerState]
