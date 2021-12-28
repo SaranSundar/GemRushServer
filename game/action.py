@@ -1,5 +1,6 @@
-from dataclasses import dataclass
 from enum import Enum
+
+from marshmallow_dataclass import dataclass
 
 
 @dataclass

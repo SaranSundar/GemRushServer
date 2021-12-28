@@ -1,10 +1,11 @@
-from dataclasses import dataclass
 from functools import lru_cache
 
 import redis
+from marshmallow_dataclass import dataclass
 
 # https://newbedev.com/error-99-connecting-to-localhost-6379-cannot-assign-requested-address
 # TODO: Make redis_host "redis" on prod build, and localhost on local development
+from state.game_state import GameState
 
 REDIS_HOST = "localhost"
 REDIS_PORT = 6379
@@ -34,8 +35,20 @@ class RedisApp:
         if class_type is None:
             self.redis_app.set(key, value)
 
-        value = value.Schema().dumps(value)
-        self.redis_app.set(key, value)
+        try:
+            print("Class type is", class_type)
+            if class_type is GameState:
+                schema = value.Schema(exclude=['player_states'])
+            else:
+                schema = value.Schema()
+            value_dump = schema.dumps(value)
+            print(value_dump)
+            # value_dump = str(value_dump)
+            self.redis_app.set(key, value_dump)
+            return value_dump
+        except Exception as e:
+            print(e)
+        return None
 
     def read(self, key, class_type=None):
         json_value = self.redis_app.get(key)

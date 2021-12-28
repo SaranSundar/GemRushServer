@@ -12,7 +12,7 @@ from json_requests.start_game_request import StartGameRequest
 from player.player import PlayerState
 from room.room import Room
 from state.game_state import GameState
-from utils.utils import generate_uid
+from utils.utils import generate_uid, generate_json
 
 redis_app = get_redis_app()
 app = Flask(__name__)
@@ -100,7 +100,11 @@ def join_room(room_id):
 def start_game():
     start_game_request = StartGameRequest(**request.json)
     room = get_room(start_game_request.room_id)
-    deck = Deck()
+    deck = Deck(
+        tiered_cards=Deck.load_card_data(),
+        noble_cards=Deck.load_nobles_data()
+    )
+    deck.shuffle()
 
     player_to_state = dict()
     shuffle(room.players)
@@ -121,8 +125,8 @@ def start_game():
     )
     room.game_state_id = game_state.id
     save_room(room)
-    save_game_state(game_state)
-    return jsonify(game_state)
+    result = save_game_state(game_state)
+    return jsonify(result)
 
 
 @app.route('/make-move', methods=['POST'])
@@ -135,12 +139,12 @@ def get_game_state_json(game_state_id):
     game_state = get_game_state(game_state_id)
     app.logger.debug('Game state value in get-game-state is')
     app.logger.debug(game_state)
-    return jsonify(game_state)
+    return generate_json(game_state)
 
 
 def save_game_state(game_state: GameState):
     key = RedisPaths.create_key([RedisPaths.GAME_STATES, game_state.id])
-    redis_app.write(key, game_state, class_type=GameState)
+    return redis_app.write(key, game_state, class_type=GameState)
 
 
 def get_game_state(game_state_id) -> GameState:

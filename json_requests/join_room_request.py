@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from marshmallow_dataclass import dataclass
 
 
 @dataclass

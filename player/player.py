@@ -1,5 +1,6 @@
-from dataclasses import dataclass
 from typing import List, Dict
+
+from marshmallow_dataclass import dataclass
 
 from card.card_data import Card, CardColor, TokenColor
 
@@ -11,7 +12,7 @@ class PlayerState:
     reserved_cards: List[Card]
 
 
-@dataclass(frozen=True)
+@dataclass(eq=True, frozen=True)
 class Player:
     id: str
 

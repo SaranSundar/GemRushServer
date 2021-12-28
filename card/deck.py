@@ -1,9 +1,8 @@
 import json
-import os
-from collections import deque
-from dataclasses import dataclass
 from random import shuffle
 from typing import Dict, List
+
+from marshmallow_dataclass import dataclass
 
 from card.card_data import Tier, Card
 from card.color import CardColor, TokenColor
@@ -12,20 +11,15 @@ from card.noble import Noble
 
 @dataclass
 class Deck:
-    tiered_cards: Dict[Tier, List[Card]]
+    tiered_cards: Dict[str, List[Card]]
+    noble_cards: List[Noble]
 
-    def __init__(self):
-        self.tiered_cards = {}
-        self.noble_cards = []
-        self._load_card_data()
-        self._shuffle()
-
-    def _load_card_data(self):
-        print(os.getcwd())
+    @staticmethod
+    def load_card_data():
         with open('./assets/deck-data.json') as f:
             data = json.load(f)
 
-        def _get_cost(cost_json: Dict) -> Dict[TokenColor, int]:
+        def _get_cost(cost_json: Dict) -> Dict[str, int]:
             colors = {
                 TokenColor.WHITE,
                 TokenColor.BLUE,
@@ -36,47 +30,58 @@ class Deck:
 
             cost = dict()
             for c in colors:
-                cost[c] = cost_json.get(c.value, 0)
+                cost[c] = cost_json.get(c)
 
             return cost
 
+        tiered_cards_dict = {}
         for card_data in data['cards']:
             card = Card(
                 card_data['points'],
-                Tier(card_data['tier']),
-                CardColor(card_data['color']),
+                card_data['tier'],
+                card_data['color'],
                 _get_cost(card_data['cost'])
             )
-            self.tiered_cards.get(card.tier, deque()).append(card)
+            if card.tier in tiered_cards_dict:
+                tiered_cards_dict[card.tier].append(card)
+            else:
+                tiered_cards_dict[card.tier] = []
+                tiered_cards_dict[card.tier].append(card)
 
-    def _load_nobles_data(self):
-        with open('../assets/nobles-data.json') as f:
+        return tiered_cards_dict
+
+    @staticmethod
+    def load_nobles_data():
+        with open('./assets/nobles-data.json') as f:
             data = json.load(f)
 
-        def _get_cost(cost_json: Dict) -> Dict[CardColor, int]:
+        def _get_cost(cost_json: Dict) -> Dict[str, int]:
             colors = {
-                TokenColor.WHITE,
-                TokenColor.BLUE,
-                TokenColor.GREEN,
-                TokenColor.RED,
-                TokenColor.BLACK,
+                CardColor.WHITE,
+                CardColor.BLUE,
+                CardColor.GREEN,
+                CardColor.RED,
+                CardColor.BLACK,
             }
 
             cost = dict()
             for c in colors:
-                cost[c] = cost_json.get(c.value, 0)
+                cost[c] = cost_json.get(c)
 
             return cost
 
+        noble_cards_list = []
         for card_data in data['cards']:
             noble = Noble(
                 card_data['points'],
                 _get_cost(card_data['cost'])
             )
-            self.noble_cards.append(noble)
+            noble_cards_list.append(noble)
 
-    def _shuffle(self):
-        for tier, cards in self.tiered_cards:
+        return noble_cards_list
+
+    def shuffle(self):
+        for tier, cards in self.tiered_cards.items():
             shuffle(cards)
         shuffle(self.noble_cards)
 
