@@ -76,12 +76,13 @@ def get_room_json(room_id):
 
 def save_room(room: Room):
     key = RedisPaths.create_key([RedisPaths.ROOMS, room.id])
-    redis_app.write(key, room)
+    redis_app.write(key, room, class_type=Room)
 
 
 def get_room(room_id) -> Room:
     key = RedisPaths.create_key([RedisPaths.ROOMS, room_id])
-    return redis_app.read(key, class_type=Room)
+    room = redis_app.read(key, class_type=Room)
+    return room
 
 
 @app.route('/join-room/<room_id>', methods=['POST'])
@@ -92,6 +93,7 @@ def join_room(room_id):
     app.logger.debug('Room value in join-room is')
     app.logger.debug(room)
     save_room(room)
+    return jsonify(room)
 
 
 @app.route('/start-game', methods=['POST'])

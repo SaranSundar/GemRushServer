@@ -5,6 +5,7 @@ from typing import List
 from json_requests.create_room_request import CreateRoomRequest
 from player.player import Player
 from utils.utils import generate_uid
+from marshmallow_dataclass import dataclass
 
 
 @dataclass
@@ -39,3 +40,4 @@ class Room:
         assert len(self.players) <= self.max_players - 1, 'Maximum player reached'
 
         self.players.append(Player(player_id))
+
