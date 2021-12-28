@@ -29,6 +29,7 @@ def get_redis_app():
 class RedisApp:
     redis_app = redis.Redis(host=REDIS_HOST, port=REDIS_PORT)
 
+    # https://stackoverflow.com/questions/51286748/make-the-python-json-encoder-support-pythons-new-dataclasses
     def write(self, key, value, class_type=None):
         if class_type is None:
             self.redis_app.set(key, value)

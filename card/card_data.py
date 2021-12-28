@@ -11,6 +11,9 @@ class Tier(Enum):
     YELLOW = 'yellow'
     BLUE = 'blue'
 
+    def __hash__(self):
+        return hash(str(self.GREEN)) ^ hash(str(self.BLUE)) ^ hash(str(self.YELLOW))
+
 
 @dataclass
 class Card:

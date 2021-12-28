@@ -11,6 +11,9 @@ class PlayerState:
     reserved_cards: List[Card]
 
 
-@dataclass
+@dataclass(frozen=True)
 class Player:
     id: str
+
+    def __hash__(self):
+        return hash(self.id)

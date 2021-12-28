@@ -104,6 +104,7 @@ def start_game():
 
     player_to_state = dict()
     shuffle(room.players)
+    # https://stackoverflow.com/questions/52390576/how-can-i-make-a-python-dataclass-hashable-without-making-them-immutable
     for player in room.players:
         player_to_state[player] = PlayerState({}, {}, [])
 
@@ -120,6 +121,8 @@ def start_game():
     )
     room.game_state_id = game_state.id
     save_room(room)
+    save_game_state(game_state)
+    return jsonify(game_state)
 
 
 @app.route('/make-move', methods=['POST'])
@@ -127,10 +130,23 @@ def make_move():
     pass
 
 
-@app.route('/get-game-state', methods=['POST'])
-def get_game_state():
-    # TODO
-    pass
+@app.route('/get-game-state/<game_state_id>', methods=['GET'])
+def get_game_state_json(game_state_id):
+    game_state = get_game_state(game_state_id)
+    app.logger.debug('Game state value in get-game-state is')
+    app.logger.debug(game_state)
+    return jsonify(game_state)
+
+
+def save_game_state(game_state: GameState):
+    key = RedisPaths.create_key([RedisPaths.GAME_STATES, game_state.id])
+    redis_app.write(key, game_state, class_type=GameState)
+
+
+def get_game_state(game_state_id) -> GameState:
+    key = RedisPaths.create_key([RedisPaths.GAME_STATES, game_state_id])
+    game_state = redis_app.read(key, class_type=GameState)
+    return game_state
 
 
 if __name__ == '__main__':

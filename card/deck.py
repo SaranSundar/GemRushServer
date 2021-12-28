@@ -1,4 +1,5 @@
 import json
+import os
 from collections import deque
 from dataclasses import dataclass
 from random import shuffle
@@ -20,7 +21,8 @@ class Deck:
         self._shuffle()
 
     def _load_card_data(self):
-        with open('../assets/deck-data.json') as f:
+        print(os.getcwd())
+        with open('./assets/deck-data.json') as f:
             data = json.load(f)
 
         def _get_cost(cost_json: Dict) -> Dict[TokenColor, int]:
@@ -42,7 +44,7 @@ class Deck:
             card = Card(
                 card_data['points'],
                 Tier(card_data['tier']),
-                CardColor(card_data[card_data['color']]),
+                CardColor(card_data['color']),
                 _get_cost(card_data['cost'])
             )
             self.tiered_cards.get(card.tier, deque()).append(card)

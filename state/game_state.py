@@ -1,6 +1,7 @@
-from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Dict
+
+from marshmallow_dataclass import dataclass
 
 from card.deck import Deck
 from player.player import Player, PlayerState

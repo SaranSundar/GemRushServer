@@ -12,6 +12,10 @@ class TokenColor(Enum):
     BLACK = 'black'
     GOLD = 'gold'
 
+    def __hash__(self):
+        return hash(str(self.RED)) ^ hash(str(self.GREEN)) ^ hash(str(self.BLUE)) ^ hash(str(self.WHITE)) ^ hash(str(self.BLACK)) ^ hash(
+            str(self.GOLD))
+
 
 @dataclass
 class CardColor(Enum):
