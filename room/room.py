@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 from typing import List
 
 from serde import serialize, deserialize
@@ -19,7 +20,8 @@ class Room:
     max_players: int
     owner: Player
     players: List[Player]
-    game_state_id: str = None
+    time_room_created: datetime
+    game_state_id: str
 
     @staticmethod
     def request_to_dto(create_room_request: CreateRoomRequest):
@@ -31,7 +33,9 @@ class Room:
             min_players=create_room_request.min_players,
             max_players=create_room_request.max_players,
             owner=owner,
-            players=[owner]
+            players=[owner],
+            time_room_created=datetime.utcnow(),
+            game_state_id=""
         )
 
     def join(self, player_id: str, password: str):

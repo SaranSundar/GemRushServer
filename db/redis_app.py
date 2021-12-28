@@ -5,7 +5,8 @@ from functools import lru_cache
 import redis
 from serde.json import to_json
 
-REDIS_HOST = "localhost"
+# https://newbedev.com/error-99-connecting-to-localhost-6379-cannot-assign-requested-address
+REDIS_HOST = "redis"
 REDIS_PORT = 6379
 
 
@@ -33,3 +34,6 @@ class RedisApp:
 
     def read(self, key):
         return json.loads(self.redis_app.get(key))
+
+    def incr(self, key):
+        self.redis_app.incr(key)

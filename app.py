@@ -1,3 +1,4 @@
+from datetime import datetime
 from random import shuffle
 
 from flask import Flask, request, jsonify
@@ -14,6 +15,12 @@ from utils.utils import generate_uid
 
 redis_app = get_redis_app()
 app = Flask(__name__)
+
+
+@app.route('/')
+def hello():
+    redis_app.incr('hits')
+    return 'This Compose/Flask demo has been viewed %s time(s).' % redis_app.read('hits')
 
 
 # Player 1 creates a room
@@ -79,12 +86,16 @@ def start_game():
     for player in room.players:
         player_to_state[player] = PlayerState({}, {}, [])
 
+    time_game_started = datetime.utcnow()
+
     game_state = GameState(
         id=generate_uid(),
         player_states=player_to_state,
         deck=deck,
         turn_number=0,
-        turn_order=room.players
+        turn_order=room.players,
+        time_game_started=time_game_started,
+        time_last_move_completed=time_game_started
     )
     room.game_state_id = game_state.id
     save_room(room)
@@ -102,4 +113,4 @@ def get_game_state():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True, port=5000)
+    app.run(host="0.0.0.0", debug=True, port=9375)

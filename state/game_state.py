@@ -1,10 +1,8 @@
 from dataclasses import dataclass
+from datetime import datetime
 from typing import List, Dict
 
-from card.card_data import Card, Tier
-from card.color import TokenColor
 from card.deck import Deck
-from card.noble import Noble
 from player.player import Player, PlayerState
 
 
@@ -15,3 +13,5 @@ class GameState:
     deck: Deck
     turn_number: int
     turn_order: List[Player]
+    time_game_started: datetime
+    time_last_move_completed: datetime
