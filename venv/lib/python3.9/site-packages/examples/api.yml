@@ -1,0 +1,12 @@
+apiVersion: v1beta
+spec:
+  pipeline:
+    input:
+      operation: read
+      pattern: ^DE\-PH\-PL_[A-Z]{3}[0-9]{9}_[0-9]{2}\-[0-9]+\-.+\-.+.pdf
+      type: pdf
+    output:
+      operation: copy
+      from: input
+      filename: |
+        REPLACE(DE/PH/{AS_INPUT}.pdf, "DE-PH-", "")
