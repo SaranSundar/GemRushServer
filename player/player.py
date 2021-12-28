@@ -12,6 +12,7 @@ from card.card_data import Card, CardColor, TokenColor
 class PlayerState:
     cards: Dict[CardColor, List[Card]]
     tokens: Dict[TokenColor, int]
+    reserved_cards: List[Card]
 
 
 @deserialize

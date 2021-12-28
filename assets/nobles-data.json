@@ -1,0 +1,44 @@
+{
+  "cards": [
+    {
+      "points": 3,
+      "cost": {
+        "white": 3,
+        "blue": 3,
+        "green": 3,
+        "red": 0,
+        "black": 0
+      }
+    },
+    {
+      "points": 3,
+      "cost": {
+        "white": 4,
+        "blue": 0,
+        "green": 0,
+        "red": 4,
+        "black": 0
+      }
+    },
+    {
+      "points": 3,
+      "cost": {
+        "white": 0,
+        "blue": 4,
+        "green": 4,
+        "red": 0,
+        "black": 0
+      }
+    },
+    {
+      "points": 3,
+      "cost": {
+        "white": 0,
+        "blue": 3,
+        "green": 0,
+        "red": 3,
+        "black": 3
+      }
+    }
+  ]
+}

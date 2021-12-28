@@ -2,7 +2,6 @@ import json
 from dataclasses import dataclass
 from functools import lru_cache
 
-from typing import Type
 import redis
 from serde.json import to_json
 
@@ -13,6 +12,7 @@ REDIS_PORT = 6379
 @dataclass
 class RedisPaths:
     ROOMS = "rooms"
+    GAME_STATES = "game_states"
 
     @staticmethod
     def create_key(paths):
@@ -31,5 +31,5 @@ class RedisApp:
     def write(self, key, value):
         self.redis_app.set(key, to_json(value))
 
-    def read(self, c: Type, key):
+    def read(self, key):
         return json.loads(self.redis_app.get(key))

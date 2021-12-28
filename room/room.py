@@ -1,4 +1,3 @@
-import uuid
 from dataclasses import dataclass
 from typing import List
 
@@ -6,6 +5,8 @@ from serde import serialize, deserialize
 
 from json_requests.create_room_request import CreateRoomRequest
 from player.player import Player
+from utils.utils import generate_uid
+
 
 @deserialize
 @serialize
@@ -24,7 +25,7 @@ class Room:
     def request_to_dto(create_room_request: CreateRoomRequest):
         owner = Player(create_room_request.creator_id)
         return Room(
-            id=str(uuid.uuid4()),
+            id=generate_uid(),
             name=create_room_request.name,
             password=create_room_request.password,
             min_players=create_room_request.min_players,
