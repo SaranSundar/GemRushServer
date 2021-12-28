@@ -11,7 +11,7 @@ from player.player import Player, PlayerState
 @dataclass(eq=True, frozen=True)
 class GameState:
     id: str
-    player_states: Dict[Player, PlayerState]
+    player_states: Dict[str, PlayerState]
     deck: Deck
     turn_number: int
     turn_order: List[Player]

@@ -1,5 +1,7 @@
 from marshmallow_dataclass import dataclass
 
+# TODO: This was an enum, currently not being used
+
 
 @dataclass
 class TokenColor:

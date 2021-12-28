@@ -2,17 +2,17 @@ from typing import List, Dict
 
 from marshmallow_dataclass import dataclass
 
-from card.card_data import Card, CardColor, TokenColor
+from card.card_data import Card
 
 
 @dataclass
 class PlayerState:
-    cards: Dict[CardColor, List[Card]]
-    tokens: Dict[TokenColor, int]
+    cards: Dict[str, List[Card]]
+    tokens: Dict[str, int]
     reserved_cards: List[Card]
 
 
-@dataclass(eq=True, frozen=True)
+@dataclass
 class Player:
     id: str
 

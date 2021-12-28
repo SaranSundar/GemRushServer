@@ -6,6 +6,7 @@ from marshmallow_dataclass import dataclass
 from card.color import CardColor, TokenColor
 
 
+# TODO: This was an enum, currently not being used
 @dataclass
 class Tier:
     GREEN = 'green'

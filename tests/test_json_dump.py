@@ -6,9 +6,10 @@ from state.game_state import GameState
 
 
 def test_start_game():
+    # TODO: Automatically get room id
     url = "http://0.0.0.0:9378/start-game"
     payload = json.dumps({
-        "room_id": "b049c20f-ef10-4b1f-9239-6e5193c0a0ad"
+        "room_id": "b711bb9e-6dd2-4a9b-a3c2-cf004b78753b"
     })
     headers = {
         'Content-Type': 'application/json'
@@ -16,10 +17,8 @@ def test_start_game():
 
     response = requests.request("POST", url, headers=headers, data=payload)
     data = json.loads(response.json())
-    data['player_states'] = {}
-    print(data)
+
+    # Assert game state is valid in 2 different ways
     game_state = GameState.Schema().loads(response.json())
-
-    # game_state = GameState(**data)
-
+    game_state = GameState(**data)
     print(game_state)

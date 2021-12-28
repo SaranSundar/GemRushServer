@@ -38,7 +38,7 @@ class RedisApp:
         try:
             print("Class type is", class_type)
             if class_type is GameState:
-                schema = value.Schema(exclude=['player_states'])
+                schema = value.Schema()
             else:
                 schema = value.Schema()
             value_dump = schema.dumps(value)

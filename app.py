@@ -110,7 +110,7 @@ def start_game():
     shuffle(room.players)
     # https://stackoverflow.com/questions/52390576/how-can-i-make-a-python-dataclass-hashable-without-making-them-immutable
     for player in room.players:
-        player_to_state[player] = PlayerState({}, {}, [])
+        player_to_state[player.id] = PlayerState({}, {}, [])
 
     time_game_started = datetime.utcnow()
 
