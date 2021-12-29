@@ -1,9 +1,9 @@
 from enum import Enum
 
-from marshmallow_dataclass import dataclass
+from marshmallow_dataclass import dataclass as mmdc
 
 
-@dataclass
+@mmdc
 class Action(Enum):
     GET_CHIPS = "get_chips"
     RESERVE_CARD = "reserve_card"

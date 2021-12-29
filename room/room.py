@@ -1,14 +1,14 @@
 from datetime import datetime
 from typing import List
 
-from marshmallow_dataclass import dataclass
+from marshmallow_dataclass import dataclass as mmdc
 
 from json_requests.create_room_request import CreateRoomRequest
 from player.player import Player
 from utils.utils import generate_uid
 
 
-@dataclass
+@mmdc
 class Room:
     id: str
     name: str

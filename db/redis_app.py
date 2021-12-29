@@ -1,7 +1,7 @@
 from functools import lru_cache
 
 import redis
-from marshmallow_dataclass import dataclass
+from marshmallow_dataclass import dataclass as mmdc
 
 # https://newbedev.com/error-99-connecting-to-localhost-6379-cannot-assign-requested-address
 # TODO: Make redis_host "redis" on prod build, and localhost on local development
@@ -10,7 +10,7 @@ REDIS_HOST = "localhost"
 REDIS_PORT = 6379
 
 
-@dataclass
+@mmdc
 class RedisPaths:
     ROOMS = "rooms"
     GAME_STATES = "game_states"
@@ -25,7 +25,7 @@ def get_redis_app():
     return RedisApp()
 
 
-@dataclass
+@mmdc
 class RedisApp:
     redis_app = redis.Redis(host=REDIS_HOST, port=REDIS_PORT)
 

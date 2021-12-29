@@ -1,6 +1,6 @@
-from marshmallow_dataclass import dataclass
+from marshmallow_dataclass import dataclass as mmdc
 
 
-@dataclass
+@mmdc
 class StartGameRequest:
     room_id: str

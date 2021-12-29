@@ -1,13 +1,11 @@
-from enum import Enum
+from dataclasses import dataclass
 from typing import Dict
 
-from marshmallow_dataclass import dataclass
-
-from card.color import CardColor, TokenColor
+from marshmallow_dataclass import dataclass as mmdc
 
 
 # TODO: This was an enum, currently not being used
-@dataclass
+@mmdc
 class Tier:
     GREEN = 'green'
     YELLOW = 'yellow'
@@ -15,6 +13,7 @@ class Tier:
 
 
 @dataclass
+@mmdc
 class Card:
     points: int
     tier: str

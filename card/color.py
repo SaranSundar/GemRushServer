@@ -1,9 +1,9 @@
-from marshmallow_dataclass import dataclass
+from marshmallow_dataclass import dataclass as mmdc
 
 # TODO: This was an enum, currently not being used
 
 
-@dataclass
+@mmdc
 class TokenColor:
     RED = 'red'
     GREEN = 'green'
@@ -13,7 +13,7 @@ class TokenColor:
     GOLD = 'gold'
 
 
-@dataclass
+@mmdc
 class CardColor:
     RED = 'red'
     GREEN = 'green'

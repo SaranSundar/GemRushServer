@@ -1,11 +1,10 @@
 from typing import Dict
 
-from marshmallow_dataclass import dataclass
-
-from card.card_data import CardColor
+from marshmallow_dataclass import dataclass as mmdc
 
 
-@dataclass
+@mmdc
 class Noble:
     points: int
+    # CardColor
     cost: Dict[str, int]

@@ -8,6 +8,7 @@ from card.deck import Deck
 from db.redis_app import get_redis_app, RedisPaths
 from json_requests.create_room_request import CreateRoomRequest
 from json_requests.join_room_request import JoinRoomRequest
+from json_requests.new_move_request import EndTurnRequest
 from json_requests.start_game_request import StartGameRequest
 from player.player import PlayerState
 from room.room import Room
@@ -129,9 +130,14 @@ def start_game():
     return jsonify(result)
 
 
-@app.route('/make-move', methods=['POST'])
-def make_move():
-    pass
+@app.route('/end-turn', methods=['POST'])
+def end_turn():
+    new_move_request = EndTurnRequest(**request.json)
+    # TODO: Validate request
+    # Check that player id exists in room and game state
+    # Check that it is this player ids turn
+    # Check if the action they choose was a valid action
+    # Send back new game state with updated turn if action was valid
 
 
 @app.route('/get-game-state/<game_state_id>', methods=['GET'])

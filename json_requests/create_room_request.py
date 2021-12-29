@@ -1,7 +1,7 @@
-from marshmallow_dataclass import dataclass
+from marshmallow_dataclass import dataclass as mmdc
 
 
-@dataclass
+@mmdc
 class CreateRoomRequest:
     name: str
     password: str

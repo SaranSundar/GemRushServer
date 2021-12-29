@@ -1,8 +1,9 @@
 import json
+from dataclasses import dataclass
 from random import shuffle
 from typing import Dict, List
 
-from marshmallow_dataclass import dataclass
+from marshmallow_dataclass import dataclass as mmdc
 
 from card.card_data import Tier, Card
 from card.color import CardColor, TokenColor
@@ -10,6 +11,7 @@ from card.noble import Noble
 
 
 @dataclass
+@mmdc
 class Deck:
     tiered_cards: Dict[str, List[Card]]
     noble_cards: List[Noble]
