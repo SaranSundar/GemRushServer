@@ -2,12 +2,12 @@ from enum import Enum
 
 
 class TokenColor(str, Enum):
-    RED = 'red'
-    GREEN = 'green'
-    BLUE = 'blue'
-    WHITE = 'white'
-    BLACK = 'black'
-    GOLD = 'gold'
+    RED = 'RED'
+    GREEN = 'GREEN'
+    BLUE = 'BLUE'
+    WHITE = 'WHITE'
+    BLACK = 'BLACK'
+    GOLD = 'GOLD'
 
     def __str__(self):
-        return self.value
+        return self.name

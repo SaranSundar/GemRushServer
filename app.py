@@ -1,14 +1,17 @@
 import logging
 from datetime import datetime
+from enum import Enum
 from random import shuffle
-from typing import List
 
 from flask import Flask, request, jsonify
 from flask.json import JSONEncoder
 
 from card.deck import Deck
 from db.redis_app import get_redis_app, RedisPaths
+from enums.CardColor import CardColor
 from enums.EndTurnAction import EndTurnAction
+from enums.Tier import Tier
+from enums.TokenColor import TokenColor
 from json_requests.create_room_request import CreateRoomRequest
 from json_requests.end_turn_request import EndTurnRequest
 from json_requests.join_room_request import JoinRoomRequest
@@ -24,7 +27,6 @@ class MyJSONEncoder(JSONEncoder):
     def default(self, o):
         if isinstance(o, datetime):
             return o.isoformat()
-
         return super().default(o)
 
 
@@ -144,6 +146,7 @@ def start_game():
     )
     room.game_state_id = game_state.id
     save_room(room)
+    save_game_state(game_state)
     return jsonify(game_state)
 
 
@@ -189,8 +192,8 @@ def validate_and_end_turn(end_turn_request: EndTurnRequest) -> GameState:
         winning_players = sorted(winning_players, key=lambda wp: (wp[0], -wp[1]))
 
         if winning_players:
-            game_state.winners = filter(lambda x: x == winning_players[0], winning_players)
-            
+            game_state.winners = list(filter(lambda x: x == winning_players[0], winning_players))
+
     # Go to next players turn
     game_state.turn_number += 1
     if game_state.turn_number >= len(game_state.turn_order):
@@ -204,7 +207,8 @@ def get_game_state_json(game_state_id):
     game_state = get_game_state(game_state_id)
     app.logger.debug('Game state value in get-game-state is')
     app.logger.debug(game_state)
-    return jsonify(game_state)
+    result = jsonify(game_state)
+    return result
 
 
 def save_game_state(game_state: GameState):

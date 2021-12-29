@@ -2,9 +2,9 @@ from enum import Enum
 
 
 class Tier(str, Enum):
-    GREEN = 'green'
-    YELLOW = 'yellow'
-    BLUE = 'blue'
+    GREEN = 'GREEN'
+    YELLOW = 'YELLOW'
+    BLUE = 'BLUE'
 
     def __str__(self):
-        return self.value
+        return self.name

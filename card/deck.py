@@ -37,7 +37,7 @@ class Deck:
 
             cost_dict = dict()
             for color in colors:
-                cost_dict[TokenColor(color)] = cost_json.get(color.value)
+                cost_dict[TokenColor(color)] = cost_json.get(color.value.lower())
 
             return cost_dict
 
@@ -46,8 +46,8 @@ class Deck:
             cost = _get_cost(card_data['cost'])
             card = Card(
                 card_data['points'],
-                Tier(card_data['tier']),
-                CardColor(card_data['color']),
+                Tier(card_data['tier'].upper()),
+                CardColor(card_data['color'].upper()),
                 cost=cost
             )
             if card.tier in tiered_cards_dict:
@@ -74,7 +74,7 @@ class Deck:
 
             cost_dict = dict()
             for color in colors:
-                cost_dict[CardColor(color)] = cost_json.get(color.value)
+                cost_dict[CardColor(color)] = cost_json.get(color.value.lower())
 
             return cost_dict
 

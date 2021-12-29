@@ -9,3 +9,6 @@ class EndTurnAction(IntEnum):
     Buying2SameTokens = 4
     # When you can only buy 1 or 2 tokens cause you have 8 or 9
     BuyingLimitedTokens = 5
+
+    def __str__(self):
+        return self.name
