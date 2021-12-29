@@ -187,20 +187,10 @@ def validate_and_end_turn(end_turn_request: EndTurnRequest) -> GameState:
             if points >= room.score_to_win:
                 winning_players.append((points, total_num_cards, player_id))
         winning_players = sorted(winning_players, key=lambda wp: (wp[0], -wp[1]))
-        # Only take the players with the same number of max points
-        true_winners = []
-        max_points = winning_players[0]
-        for winning_player in winning_players:
-            if winning_player[0] == max_points:
-                true_winners.append(winning_player)
-        # Only take the players with the same least number of cards
-        tied_winners: List[str] = []
-        min_cards = true_winners[0]
-        for true_winner in true_winners:
-            if true_winner[1] == min_cards:
-                tied_winners.append(true_winner[2])
 
-        game_state.winners = tied_winners
+        if winning_players:
+            game_state.winners = filter(lambda x: x == winning_players[0], winning_players)
+            
     # Go to next players turn
     game_state.turn_number += 1
     if game_state.turn_number >= len(game_state.turn_order):
