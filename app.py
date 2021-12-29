@@ -150,9 +150,12 @@ def start_game():
 @app.route('/end-turn', methods=['POST'])
 def end_turn():
     end_turn_request = EndTurnRequest(**request.json)
+    game_state = validate_and_end_turn(end_turn_request)
+    save_game_state(game_state)
+    return jsonify(game_state)
 
 
-def validate_and_end_turn(end_turn_request: EndTurnRequest):
+def validate_and_end_turn(end_turn_request: EndTurnRequest) -> GameState:
     game_state = get_game_state(end_turn_request.game_state_id)
     room: Room = get_room(end_turn_request.room_id)
     # TODO: Validate request
@@ -202,6 +205,8 @@ def validate_and_end_turn(end_turn_request: EndTurnRequest):
     game_state.turn_number += 1
     if game_state.turn_number >= len(game_state.turn_order):
         game_state.turn_number = 0
+
+    return game_state
 
 
 @app.route('/get-game-state/<game_state_id>', methods=['GET'])
