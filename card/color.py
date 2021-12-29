@@ -1,10 +1,7 @@
-from marshmallow_dataclass import dataclass as mmdc
-
-# TODO: This was an enum, currently not being used
+from enum import Enum
 
 
-@mmdc
-class TokenColor:
+class TokenColor(str, Enum):
     RED = 'red'
     GREEN = 'green'
     BLUE = 'blue'
@@ -12,11 +9,16 @@ class TokenColor:
     BLACK = 'black'
     GOLD = 'gold'
 
+    def __str__(self):
+        return self.value
 
-@mmdc
-class CardColor:
+
+class CardColor(str, Enum):
     RED = 'red'
     GREEN = 'green'
     BLUE = 'blue'
     WHITE = 'white'
     BLACK = 'black'
+
+    def __str__(self):
+        return self.value

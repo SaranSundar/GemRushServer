@@ -1,7 +1,4 @@
 import uuid
-from marshmallow_dataclass import dataclass as mmdc
-
-from state.game_state import GameState
 
 
 def generate_uid():

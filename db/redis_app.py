@@ -34,6 +34,7 @@ class RedisApp:
         if class_type is None:
             self.redis_app.set(key, value)
 
+        print(class_type)
         value_dump = value.Schema().dumps(value)
         print(value_dump)
         # value_dump = str(value_dump)

@@ -1,4 +1,5 @@
 import json
+import os
 from dataclasses import dataclass
 from random import shuffle
 from typing import Dict, List
@@ -13,15 +14,16 @@ from card.noble import Noble
 @dataclass
 @mmdc
 class Deck:
-    tiered_cards: Dict[str, List[Card]]
+    tiered_cards: Dict[Tier, List[Card]]
     noble_cards: List[Noble]
 
     @staticmethod
-    def load_card_data():
-        with open('./assets/deck-data.json') as f:
+    def load_card_data(filepath='./assets/deck-data.json'):
+        print(os.getcwd())
+        with open(filepath) as f:
             data = json.load(f)
 
-        def _get_cost(cost_json: Dict) -> Dict[str, int]:
+        def _get_cost(cost_json: Dict) -> Dict[TokenColor, int]:
             colors = {
                 TokenColor.WHITE,
                 TokenColor.BLUE,
@@ -30,19 +32,20 @@ class Deck:
                 TokenColor.BLACK,
             }
 
-            cost = dict()
-            for c in colors:
-                cost[c] = cost_json.get(c)
+            cost_dict = dict()
+            for color in colors:
+                cost_dict[TokenColor(color)] = cost_json.get(color.value)
 
-            return cost
+            return cost_dict
 
         tiered_cards_dict = {}
         for card_data in data['cards']:
+            cost = _get_cost(card_data['cost'])
             card = Card(
                 card_data['points'],
-                card_data['tier'],
-                card_data['color'],
-                _get_cost(card_data['cost'])
+                Tier(card_data['tier']),
+                CardColor(card_data['color']),
+                cost=cost
             )
             if card.tier in tiered_cards_dict:
                 tiered_cards_dict[card.tier].append(card)
@@ -53,11 +56,11 @@ class Deck:
         return tiered_cards_dict
 
     @staticmethod
-    def load_nobles_data():
-        with open('./assets/nobles-data.json') as f:
+    def load_nobles_data(filepath='./assets/nobles-data.json'):
+        with open(filepath) as f:
             data = json.load(f)
 
-        def _get_cost(cost_json: Dict) -> Dict[str, int]:
+        def _get_cost(cost_json: Dict) -> Dict[CardColor, int]:
             colors = {
                 CardColor.WHITE,
                 CardColor.BLUE,
@@ -66,11 +69,11 @@ class Deck:
                 CardColor.BLACK,
             }
 
-            cost = dict()
-            for c in colors:
-                cost[c] = cost_json.get(c)
+            cost_dict = dict()
+            for color in colors:
+                cost_dict[CardColor(color)] = cost_json.get(color.value)
 
-            return cost
+            return cost_dict
 
         noble_cards_list = []
         for card_data in data['cards']:

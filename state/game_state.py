@@ -1,8 +1,9 @@
+import json
+from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Dict
 
 from marshmallow_dataclass import dataclass as mmdc
-from dataclasses import dataclass
 
 from card.deck import Deck
 from player.player import Player, PlayerState
@@ -12,7 +13,7 @@ from player.player import Player, PlayerState
 @mmdc
 class GameState:
     id: str
-    # Player id
+    # Player id -> PlayerState
     player_states: Dict[str, PlayerState]
     deck: Deck
     turn_number: int

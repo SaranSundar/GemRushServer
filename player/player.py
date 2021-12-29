@@ -4,15 +4,16 @@ from typing import List, Dict
 from marshmallow_dataclass import dataclass as mmdc
 
 from card.card_data import Card
+from card.color import CardColor, TokenColor
 
 
 @dataclass
 @mmdc
 class PlayerState:
     # CardColor
-    cards: Dict[str, List[Card]]
+    cards: Dict[CardColor, List[Card]]
     # TokenColor
-    tokens: Dict[str, int]
+    tokens: Dict[TokenColor, int]
     reserved_cards: List[Card]
 
 
