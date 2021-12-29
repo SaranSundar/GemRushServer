@@ -4,21 +4,22 @@ from typing import List, Dict
 from marshmallow_dataclass import dataclass as mmdc
 
 from card.card_data import Card
-from card.color import CardColor, TokenColor
+from card.noble import Noble
+from enums.CardColor import CardColor
+from enums.TokenColor import TokenColor
 
 
-@dataclass
 @mmdc
+@dataclass
 class PlayerState:
-    # CardColor
     cards: Dict[CardColor, List[Card]]
-    # TokenColor
     tokens: Dict[TokenColor, int]
     reserved_cards: List[Card]
+    nobles: List[Noble]
 
 
-@dataclass
 @mmdc
+@dataclass
 class Player:
     id: str
 

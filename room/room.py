@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from datetime import datetime
 from typing import List
 
@@ -9,6 +10,7 @@ from utils.utils import generate_uid
 
 
 @mmdc
+@dataclass
 class Room:
     id: str
     name: str
@@ -17,8 +19,11 @@ class Room:
     max_players: int
     owner: Player
     players: List[Player]
+    # "time_room_created": "Wed, 29 Dec 2021 19:21:59 GMT"
+    # "time_room_created": "2021-12-29T19:21:59.553236"
     time_room_created: datetime
     game_state_id: str
+    score_to_win: int
 
     @staticmethod
     def request_to_dto(create_room_request: CreateRoomRequest):
@@ -32,7 +37,8 @@ class Room:
             owner=owner,
             players=[owner],
             time_room_created=datetime.utcnow(),
-            game_state_id=""
+            game_state_id="",
+            score_to_win=create_room_request.score_to_win
         )
 
     def join(self, player_id: str, password: str):

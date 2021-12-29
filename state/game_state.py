@@ -1,4 +1,3 @@
-import json
 from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Dict
@@ -9,8 +8,8 @@ from card.deck import Deck
 from player.player import Player, PlayerState
 
 
-@dataclass
 @mmdc
+@dataclass
 class GameState:
     id: str
     # Player id -> PlayerState

@@ -1,14 +1,15 @@
 import json
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from random import shuffle
 from typing import Dict, List
 
 from marshmallow_dataclass import dataclass as mmdc
 
 from card.card_data import Tier, Card
-from card.color import CardColor, TokenColor
 from card.noble import Noble
+from enums.CardColor import CardColor
+from enums.TokenColor import TokenColor
 
 
 @dataclass
@@ -16,6 +17,8 @@ from card.noble import Noble
 class Deck:
     tiered_cards: Dict[Tier, List[Card]]
     noble_cards: List[Noble]
+    # Cards drawn from tiered_cards end up in board
+    board: Dict[Tier, List[Card]] = field(default_factory=lambda: {})
 
     @staticmethod
     def load_card_data(filepath='./assets/deck-data.json'):
@@ -91,5 +94,10 @@ class Deck:
         shuffle(self.noble_cards)
 
     def draw(self, tier: Tier):
-        assert len(self.tiered_cards[tier]) != 0
-        return self.tiered_cards[tier].pop(0)
+        # Place card on board if tiered list is not empty
+        if len(self.tiered_cards[tier]) > 0:
+            if tier in self.board:
+                self.board[tier].append(self.tiered_cards[tier].pop(0))
+            else:
+                self.board[tier] = []
+                self.board[tier].append(self.tiered_cards[tier].pop(0))

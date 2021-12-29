@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from functools import lru_cache
 
 import redis
@@ -11,6 +12,7 @@ REDIS_PORT = 6379
 
 
 @mmdc
+@dataclass
 class RedisPaths:
     ROOMS = "rooms"
     GAME_STATES = "game_states"
@@ -26,6 +28,7 @@ def get_redis_app():
 
 
 @mmdc
+@dataclass
 class RedisApp:
     redis_app = redis.Redis(host=REDIS_HOST, port=REDIS_PORT)
 

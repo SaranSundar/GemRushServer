@@ -3,20 +3,36 @@ from datetime import datetime
 from random import shuffle
 
 from flask import Flask, request, jsonify
+from flask.json import JSONEncoder
 
 from card.deck import Deck
 from db.redis_app import get_redis_app, RedisPaths
+from enums.EndTurnAction import EndTurnAction
 from json_requests.create_room_request import CreateRoomRequest
+from json_requests.end_turn_request import EndTurnRequest
 from json_requests.join_room_request import JoinRoomRequest
-from json_requests.new_move_request import EndTurnRequest
 from json_requests.start_game_request import StartGameRequest
 from player.player import PlayerState
 from room.room import Room
+from state.game_manager import GameManager
 from state.game_state import GameState
-from utils.utils import generate_uid, generate_json
+from utils.utils import generate_uid
+
+
+class MyJSONEncoder(JSONEncoder):
+    def default(self, o):
+        if isinstance(o, datetime):
+            return o.isoformat()
+
+        return super().default(o)
+
+
+class MyFlask(Flask):
+    json_encoder = MyJSONEncoder
+
 
 redis_app = get_redis_app()
-app = Flask(__name__)
+app = MyFlask(__name__)
 
 if __name__ != '__main__':
     # https://trstringer.com/logging-flask-gunicorn-the-manageable-way/
@@ -111,7 +127,7 @@ def start_game():
     shuffle(room.players)
     # https://stackoverflow.com/questions/52390576/how-can-i-make-a-python-dataclass-hashable-without-making-them-immutable
     for player in room.players:
-        player_to_state[player.id] = PlayerState({}, {}, [])
+        player_to_state[player.id] = PlayerState({}, {}, [], [])
 
     time_game_started = datetime.utcnow()
 
@@ -126,18 +142,38 @@ def start_game():
     )
     room.game_state_id = game_state.id
     save_room(room)
-    result = save_game_state(game_state)
-    return jsonify(result)
+    return jsonify(game_state)
 
 
 @app.route('/end-turn', methods=['POST'])
 def end_turn():
-    new_move_request = EndTurnRequest(**request.json)
+    end_turn_request = EndTurnRequest(**request.json)
+
+
+def validate_and_end_turn(end_turn_request: EndTurnRequest):
+    game_state = get_game_state(end_turn_request.game_state_id)
     # TODO: Validate request
     # Check that player id exists in room and game state
     # Check that it is this player ids turn
     # Check if the action they choose was a valid action
     # Send back new game state with updated turn if action was valid
+    # If last players turn, check if anyone won
+    if end_turn_request.action == EndTurnAction.BuyingCard:
+        GameManager.buy_card(game_state, end_turn_request)
+    elif end_turn_request.action == EndTurnAction.BuyingGoldToken:
+        GameManager.buy_gold_token_and_reserve_card(game_state, end_turn_request)
+    elif end_turn_request.action == EndTurnAction.Buying3DifferentTokens:
+        pass
+    elif end_turn_request.action == EndTurnAction.Buying2SameTokens:
+        pass
+    elif end_turn_request.action == EndTurnAction.BuyingAndReturningTokens:
+        pass
+    elif end_turn_request.action == EndTurnAction.BuyingLimitedTokens:
+        pass
+
+    # At any turn a player can choose to buy a noble if they meet the requirements
+    if end_turn_request.payload.bought_noble:
+        game_state.player_states[end_turn_request.player_id].nobles.append(end_turn_request.payload.bought_noble)
 
 
 @app.route('/get-game-state/<game_state_id>', methods=['GET'])
@@ -145,7 +181,7 @@ def get_game_state_json(game_state_id):
     game_state = get_game_state(game_state_id)
     app.logger.debug('Game state value in get-game-state is')
     app.logger.debug(game_state)
-    return generate_json(game_state)
+    return jsonify(game_state)
 
 
 def save_game_state(game_state: GameState):
