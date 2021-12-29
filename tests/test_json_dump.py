@@ -93,7 +93,8 @@ def test_generating_game_state_json():
         turn_number=0,
         turn_order=[Player(generate_uid())],
         time_game_started=time_game_started,
-        time_last_move_completed=time_game_started
+        time_last_move_completed=time_game_started,
+        winners=[]
     )
 
     value_dump = game_state.Schema().dumps(game_state)

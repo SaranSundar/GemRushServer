@@ -19,6 +19,9 @@ class GameState:
     turn_order: List[Player]
     time_game_started: datetime
     time_last_move_completed: datetime
+    # Could have ties
+    # winners -> Player ids
+    winners: List[str]
 
     def __hash__(self):
         return hash(self.id)

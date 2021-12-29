@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime
 from random import shuffle
+from typing import List
 
 from flask import Flask, request, jsonify
 from flask.json import JSONEncoder
@@ -138,7 +139,8 @@ def start_game():
         turn_number=0,
         turn_order=room.players,
         time_game_started=time_game_started,
-        time_last_move_completed=time_game_started
+        time_last_move_completed=time_game_started,
+        winners=[]
     )
     room.game_state_id = game_state.id
     save_room(room)
@@ -152,12 +154,12 @@ def end_turn():
 
 def validate_and_end_turn(end_turn_request: EndTurnRequest):
     game_state = get_game_state(end_turn_request.game_state_id)
+    room: Room = get_room(end_turn_request.room_id)
     # TODO: Validate request
     # Check that player id exists in room and game state
     # Check that it is this player ids turn
     # Check if the action they choose was a valid action
     # Send back new game state with updated turn if action was valid
-    # If last players turn, check if anyone won
     if end_turn_request.action == EndTurnAction.BuyingCard:
         GameManager.buy_card(game_state, end_turn_request)
     elif end_turn_request.action == EndTurnAction.BuyingGoldToken:
@@ -174,6 +176,34 @@ def validate_and_end_turn(end_turn_request: EndTurnRequest):
     # At any turn a player can choose to buy a noble if they meet the requirements
     if end_turn_request.payload.bought_noble:
         game_state.player_states[end_turn_request.player_id].nobles.append(end_turn_request.payload.bought_noble)
+
+    # If last players turn, check if anyone won
+    if game_state.turn_number == len(game_state.turn_order) - 1:
+        winning_players = []
+        for player_id in game_state.player_states:
+            player_state: PlayerState = game_state.player_states[player_id]
+            points, total_num_cards = player_state.get_total_weight()
+            if points >= room.score_to_win:
+                winning_players.append((points, total_num_cards, player_id))
+        winning_players = sorted(winning_players, key=lambda wp: (wp[0], -wp[1]))
+        # Only take the players with the same number of max points
+        true_winners = []
+        max_points = winning_players[0]
+        for winning_player in winning_players:
+            if winning_player[0] == max_points:
+                true_winners.append(winning_player)
+        # Only take the players with the same least number of cards
+        tied_winners: List[str] = []
+        min_cards = true_winners[0]
+        for true_winner in true_winners:
+            if true_winner[1] == min_cards:
+                tied_winners.append(true_winner[2])
+
+        game_state.winners = tied_winners
+    # Go to next players turn
+    game_state.turn_number += 1
+    if game_state.turn_number >= len(game_state.turn_order):
+        game_state.turn_number = 0
 
 
 @app.route('/get-game-state/<game_state_id>', methods=['GET'])
