@@ -39,3 +39,30 @@ class GameManager:
         tokens_to_remove: List[TokenColor] = payload.tokens_returned
         for token_color in tokens_to_remove:
             player_state.tokens[token_color] -= 1
+
+    @staticmethod
+    def buy_tokens(game_state: GameState, end_turn_request: EndTurnRequest):
+        player_state: PlayerState = game_state.player_states[end_turn_request.player_id]
+        payload: EndTurnRequestPayload = end_turn_request.payload
+
+        # Buy tokens
+        tokens_to_buy: List[TokenColor] = payload.tokens_bought
+        for token_color in tokens_to_buy:
+            player_state.tokens[token_color] += 1
+
+        # Check if over 10 tokens, if so return some tokens
+        tokens_to_remove: List[TokenColor] = payload.tokens_returned
+        for token_color in tokens_to_remove:
+            player_state.tokens[token_color] -= 1
+
+    @staticmethod
+    def buy_3_different_tokens(game_state: GameState, end_turn_request: EndTurnRequest):
+        GameManager.buy_tokens(game_state, end_turn_request)
+
+    @staticmethod
+    def buy_2_same_tokens(game_state: GameState, end_turn_request: EndTurnRequest):
+        GameManager.buy_tokens(game_state, end_turn_request)
+
+    @staticmethod
+    def buy_limited_tokens(game_state: GameState, end_turn_request: EndTurnRequest):
+        GameManager.buy_tokens(game_state, end_turn_request)

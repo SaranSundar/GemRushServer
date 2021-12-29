@@ -1,14 +1,11 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class EndTurnAction(str, Enum):
+class EndTurnAction(IntEnum):
     # Any action can get a noble if player chooses to at that turn
     BuyingCard = 1
-    BuyingGoldToken = 3
-    Buying3DifferentTokens = 4
-    Buying2SameTokens = 5
-    BuyingAndReturningTokens = 6
-    BuyingLimitedTokens = 7
-
-    def __str__(self):
-        return self.value
+    BuyingGoldToken = 2
+    Buying3DifferentTokens = 3
+    Buying2SameTokens = 4
+    # When you can only buy 1 or 2 tokens cause you have 8 or 9
+    BuyingLimitedTokens = 5

@@ -165,13 +165,11 @@ def validate_and_end_turn(end_turn_request: EndTurnRequest):
     elif end_turn_request.action == EndTurnAction.BuyingGoldToken:
         GameManager.buy_gold_token_and_reserve_card(game_state, end_turn_request)
     elif end_turn_request.action == EndTurnAction.Buying3DifferentTokens:
-        pass
+        GameManager.buy_3_different_tokens(game_state, end_turn_request)
     elif end_turn_request.action == EndTurnAction.Buying2SameTokens:
-        pass
-    elif end_turn_request.action == EndTurnAction.BuyingAndReturningTokens:
-        pass
+        GameManager.buy_2_same_tokens(game_state, end_turn_request)
     elif end_turn_request.action == EndTurnAction.BuyingLimitedTokens:
-        pass
+        GameManager.buy_limited_tokens(game_state, end_turn_request)
 
     # At any turn a player can choose to buy a noble if they meet the requirements
     if end_turn_request.payload.bought_noble:
