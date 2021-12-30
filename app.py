@@ -183,6 +183,7 @@ def validate_and_end_turn(end_turn_request: EndTurnRequest) -> GameState:
     # At any turn a player can choose to buy a noble if they meet the requirements
     if end_turn_request.payload.bought_noble:
         game_state.player_states[end_turn_request.player_id].nobles.append(end_turn_request.payload.bought_noble)
+        game_state.deck.noble_cards.remove(end_turn_request.payload.bought_noble)
 
     # If last players turn, check if anyone won
     if game_state.turn_number == len(game_state.turn_order) - 1:

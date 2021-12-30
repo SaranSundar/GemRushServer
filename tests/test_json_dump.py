@@ -1,32 +1,11 @@
-import json
-from dataclasses import dataclass
 from datetime import datetime
-
-import requests
-from marshmallow_dataclass import dataclass as mmdc
 
 from card.deck import Deck
 from enums.TokenColor import TokenColor
 from game.game_state import GameState
 from player.player import Player
 from room.room import Room
-from utils.utils import generate_uid
-
-
-@dataclass
-@mmdc
-@dataclass
-class RequestMethods:
-    POST = "POST"
-    GET = "GET"
-
-
-def get_response(method, url, body):
-    payload = json.dumps(body)
-    headers = {
-        'Content-Type': 'application/json'
-    }
-    return requests.request(method, url, headers=headers, data=payload)
+from utils.utils import generate_uid, get_response, RequestMethods, parse_response
 
 
 def test_generating_game_state_json():
@@ -50,10 +29,6 @@ def test_generating_game_state_json():
 
     value_dump = game_state.Schema().dumps(game_state)
     print(value_dump)
-
-
-def parse_response(class_type, response):
-    return class_type.Schema().loads(response.text)
 
 
 def test_all():

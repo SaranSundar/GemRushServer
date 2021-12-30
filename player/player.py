@@ -36,6 +36,14 @@ class PlayerState:
 
         return points, total_num_cards
 
+    def calculate_permanent_token_discount(self, token_color: TokenColor) -> int:
+        # Ex. get number of blue cards as permanent discount for blue tokens
+        for card_color in CardColor:
+            colored_cards = self.cards[card_color]
+            if card_color.value == token_color.value:
+                return len(colored_cards)
+        return 0
+
 
 @mmdc
 @dataclass

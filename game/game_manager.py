@@ -33,7 +33,7 @@ class GameManager:
         gold_token = payload.tokens[0]
         player_state.tokens[gold_token] += 1
         # Remove 1 gold token from bank
-        game_state.deck.tokens[gold_token] -= 1
+        game_state.deck.bank[gold_token] -= 1
         # Reserve card
         player_state.reserved_cards.append(payload.reserved_card)
 
@@ -42,7 +42,7 @@ class GameManager:
         for token_color in tokens_to_remove:
             player_state.tokens[token_color] -= 1
             # Add token to bank
-            game_state.deck.tokens[token_color] += 1
+            game_state.deck.bank[token_color] += 1
 
     @staticmethod
     def buy_tokens(game_state: GameState, end_turn_request: EndTurnRequest):
@@ -54,14 +54,14 @@ class GameManager:
         for token_color in tokens_to_buy:
             player_state.tokens[token_color] += 1
             # Every token player buys needs to be removed from bank
-            game_state.deck.tokens[token_color] -= 1
+            game_state.deck.bank[token_color] -= 1
 
         # Check if over 10 tokens, if so return some tokens
         tokens_to_remove: List[TokenColor] = payload.tokens_returned
         for token_color in tokens_to_remove:
             player_state.tokens[token_color] -= 1
             # Add token to bank
-            game_state.deck.tokens[token_color] += 1
+            game_state.deck.bank[token_color] += 1
 
     @staticmethod
     def buy_3_different_tokens(game_state: GameState, end_turn_request: EndTurnRequest):

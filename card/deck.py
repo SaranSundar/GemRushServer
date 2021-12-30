@@ -17,7 +17,7 @@ from enums.TokenColor import TokenColor
 class Deck:
     tiered_cards: Dict[Tier, List[Card]]
     noble_cards: List[Noble]
-    tokens: Dict[TokenColor, int]
+    bank: Dict[TokenColor, int]
     # Cards drawn from tiered_cards end up in board
     board: Dict[Tier, List[Card]] = field(default_factory=lambda: {})
 

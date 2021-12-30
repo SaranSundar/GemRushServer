@@ -15,3 +15,9 @@ class Card:
     tier: Tier
     color: CardColor
     cost: Dict[TokenColor, int]
+
+    def get_token_cost(self):
+        tokens = 0
+        for tier in self.cost:
+            tokens += self.cost[tier]
+        return tokens
