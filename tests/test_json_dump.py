@@ -116,25 +116,60 @@ def test_all():
 
     # Game has started now, player 1 takes his turn
 
-    payload: EndTurnRequestPayload = EndTurnRequestPayload(
-        tokens_bought=[TokenColor.GREEN, TokenColor.BLUE, TokenColor.BLACK],
-        tokens_returned=[]
-    )
-
-    end_turn_request = EndTurnRequest(
-        room_id=room.id,
-        game_state_id=game_state.id,
-        player_id=room.owner.id,
-        action=EndTurnAction.Buying3DifferentTokens,
-        payload=payload
-    )
-
-    body = end_turn_request.Schema().dumps(end_turn_request)
-    print(body)
-
     player1_end_turn_1 = get_response(
         RequestMethods.POST,
         f'http://0.0.0.0:9378/end-turn',
-        body)
+        {
+            "room_id": room.id,
+            "player_id": room.players[0].id,
+            "game_state_id": game_state.id,
+            "action": "Buying3DifferentTokens",
+            "payload": {
+                "bought_noble": None,
+                "bought_card": None,
+                "reserved_card": None,
+                "tokens_returned": [],
+                "tokens_bought": [
+                    "GREEN",
+                    "BLUE",
+                    "BLACK"
+                ]
+            }
+        })
 
+    assert game_state.turn_number == 0
     game_state: GameState = parse_response(GameState, player1_end_turn_1)
+    assert game_state.player_states[room.players[0].id].tokens[TokenColor.GREEN] == 1
+    assert game_state.player_states[room.players[0].id].tokens[TokenColor.BLUE] == 1
+    assert game_state.player_states[room.players[0].id].tokens[TokenColor.BLACK] == 1
+    assert game_state.turn_number == 1
+
+    # Player 2 takes his turn
+
+    player2_end_turn_1 = get_response(
+        RequestMethods.POST,
+        f'http://0.0.0.0:9378/end-turn',
+        {
+            "room_id": room.id,
+            "player_id": room.players[1].id,
+            "game_state_id": game_state.id,
+            "action": "Buying3DifferentTokens",
+            "payload": {
+                "bought_noble": None,
+                "bought_card": None,
+                "reserved_card": None,
+                "tokens_returned": [],
+                "tokens_bought": [
+                    "RED",
+                    "BLUE",
+                    "GREEN"
+                ]
+            }
+        })
+
+    assert game_state.turn_number == 1
+    game_state: GameState = parse_response(GameState, player2_end_turn_1)
+    assert game_state.player_states[room.players[1].id].tokens[TokenColor.RED] == 1
+    assert game_state.player_states[room.players[1].id].tokens[TokenColor.BLUE] == 1
+    assert game_state.player_states[room.players[1].id].tokens[TokenColor.GREEN] == 1
+    assert game_state.turn_number == 0
