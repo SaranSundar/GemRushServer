@@ -17,6 +17,13 @@ class PlayerState:
     reserved_cards: List[Card]
     nobles: List[Noble]
 
+    @staticmethod
+    def init_tokens():
+        tokens: Dict[TokenColor, int] = {}
+        for token_color in TokenColor:
+            tokens[token_color] = 0
+        return tokens
+
     def get_total_weight(self):
         points = 0
         # Sum up points of cards in each tier and nobles

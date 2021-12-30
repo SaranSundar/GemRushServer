@@ -6,9 +6,12 @@ import requests
 from marshmallow_dataclass import dataclass as mmdc
 
 from card.deck import Deck
+from enums.EndTurnAction import EndTurnAction
+from enums.TokenColor import TokenColor
+from game.game_state import GameState
+from json_requests.end_turn_request import EndTurnRequest, EndTurnRequestPayload
 from player.player import Player
 from room.room import Room
-from game.game_state import GameState
 from utils.utils import generate_uid
 
 
@@ -35,7 +38,7 @@ def test_generating_game_state_json():
         tokens=Deck.load_tokens()
     )
     time_game_started = datetime.utcnow()
-    deck.shuffle()
+    deck.create_board()
     game_state = GameState(
         id=generate_uid(),
         player_states={},
@@ -89,7 +92,7 @@ def test_all():
             "player_id": "testuid"
         })
 
-    room = parse_response(Room, join_room_response)
+    room: Room = parse_response(Room, join_room_response)
 
     assert len(room.players) == 2
     assert room.players[0].id == "uniqueidhere"
@@ -109,4 +112,29 @@ def test_all():
         f'http://0.0.0.0:9378/get-game-state/{game_state.id}',
         {})
 
-    game_state = parse_response(GameState, get_game_state_response)
+    game_state: GameState = parse_response(GameState, get_game_state_response)
+
+    # Game has started now, player 1 takes his turn
+
+    payload: EndTurnRequestPayload = EndTurnRequestPayload(
+        tokens_bought=[TokenColor.GREEN, TokenColor.BLUE, TokenColor.BLACK],
+        tokens_returned=[]
+    )
+
+    end_turn_request = EndTurnRequest(
+        room_id=room.id,
+        game_state_id=game_state.id,
+        player_id=room.owner.id,
+        action=EndTurnAction.Buying3DifferentTokens,
+        payload=payload
+    )
+
+    body = end_turn_request.Schema().dumps(end_turn_request)
+    print(body)
+
+    player1_end_turn_1 = get_response(
+        RequestMethods.POST,
+        f'http://0.0.0.0:9378/end-turn',
+        body)
+
+    game_state: GameState = parse_response(GameState, player1_end_turn_1)

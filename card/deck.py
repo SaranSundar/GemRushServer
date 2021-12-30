@@ -96,6 +96,13 @@ class Deck:
 
         return noble_cards_list
 
+    def create_board(self):
+        self.shuffle()
+        for i in range(4):
+            self.draw(Tier.GREEN)
+            self.draw(Tier.YELLOW)
+            self.draw(Tier.BLUE)
+
     def shuffle(self):
         for tier, cards in self.tiered_cards.items():
             shuffle(cards)

@@ -8,14 +8,14 @@ from flask.json import JSONEncoder
 from card.deck import Deck
 from db.redis_app import get_redis_app, RedisPaths
 from enums.EndTurnAction import EndTurnAction
+from game.game_manager import GameManager
+from game.game_state import GameState
 from json_requests.create_room_request import CreateRoomRequest
 from json_requests.end_turn_request import EndTurnRequest
 from json_requests.join_room_request import JoinRoomRequest
 from json_requests.start_game_request import StartGameRequest
 from player.player import PlayerState
 from room.room import Room
-from game.game_manager import GameManager
-from game.game_state import GameState
 from utils.utils import generate_uid
 
 
@@ -121,13 +121,13 @@ def start_game():
         noble_cards=Deck.load_nobles_data(),
         tokens=Deck.load_tokens()
     )
-    deck.shuffle()
+    deck.create_board()
 
     player_to_state = dict()
     shuffle(room.players)
     # https://stackoverflow.com/questions/52390576/how-can-i-make-a-python-dataclass-hashable-without-making-them-immutable
     for player in room.players:
-        player_to_state[player.id] = PlayerState({}, {}, [], [])
+        player_to_state[player.id] = PlayerState({}, PlayerState.init_tokens(), [], [])
 
     time_game_started = datetime.utcnow()
 
@@ -149,7 +149,9 @@ def start_game():
 
 @app.route('/end-turn', methods=['POST'])
 def end_turn():
-    end_turn_request = EndTurnRequest(**request.json)
+    # end_turn_request = EndTurnRequest(**request.json)
+    data = request.data
+    end_turn_request = EndTurnRequest.Schema().loads(data)
     game_state = validate_and_end_turn(end_turn_request)
     save_game_state(game_state)
     return jsonify(game_state)

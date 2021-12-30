@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List
 
 from marshmallow_dataclass import dataclass as mmdc
@@ -12,11 +12,11 @@ from enums.TokenColor import TokenColor
 @mmdc
 @dataclass
 class EndTurnRequestPayload:
-    bought_card: Card
-    reserved_card: Card
-    bought_noble: Noble
-    tokens_bought: List[TokenColor]
-    tokens_returned: List[TokenColor]
+    tokens_bought: List[TokenColor] = field(default_factory=lambda: [])
+    tokens_returned: List[TokenColor] = field(default_factory=lambda: [])
+    bought_card: Card = field(default=None)
+    reserved_card: Card = field(default=None)
+    bought_noble: Noble = field(default=None)
 
 
 @mmdc
