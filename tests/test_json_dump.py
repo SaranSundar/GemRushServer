@@ -6,10 +6,8 @@ import requests
 from marshmallow_dataclass import dataclass as mmdc
 
 from card.deck import Deck
-from enums.EndTurnAction import EndTurnAction
 from enums.TokenColor import TokenColor
 from game.game_state import GameState
-from json_requests.end_turn_request import EndTurnRequest, EndTurnRequestPayload
 from player.player import Player
 from room.room import Room
 from utils.utils import generate_uid
