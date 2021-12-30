@@ -1,6 +1,6 @@
 attrs==21.4.0
 certifi==2021.10.8
-charset-normalizer==2.0.9
+charset_normalizer==2.0.9
 click==8.0.3
 Deprecated==1.2.13
 Flask==2.0.2
@@ -11,9 +11,9 @@ itsdangerous==2.0.1
 Jinja2==3.0.3
 MarkupSafe==2.0.1
 marshmallow==3.14.1
-marshmallow-dataclass==8.5.3
-marshmallow-enum==1.5.1
-mypy-extensions==0.4.3
+marshmallow_dataclass==8.5.3
+marshmallow_enum==1.5.1
+mypy_extensions==0.4.3
 packaging==21.3
 pluggy==1.0.0
 py==1.11.0
@@ -23,7 +23,7 @@ redis==4.1.0
 requests==2.26.0
 stringcase==1.2.0
 toml==0.10.2
-typing-inspect==0.7.1
+typing_inspect==0.7.1
 typing_extensions==4.0.1
 urllib3==1.26.7
 Werkzeug==2.0.2
