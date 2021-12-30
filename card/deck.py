@@ -17,8 +17,16 @@ from enums.TokenColor import TokenColor
 class Deck:
     tiered_cards: Dict[Tier, List[Card]]
     noble_cards: List[Noble]
+    tokens: Dict[TokenColor, int]
     # Cards drawn from tiered_cards end up in board
     board: Dict[Tier, List[Card]] = field(default_factory=lambda: {})
+
+    @staticmethod
+    def load_tokens(num_of_tokens=7):
+        tokens = {}
+        for token_color in TokenColor:
+            tokens[token_color] = num_of_tokens
+        return tokens
 
     @staticmethod
     def load_card_data(filepath='./assets/deck-data.json'):

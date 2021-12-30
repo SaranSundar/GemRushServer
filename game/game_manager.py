@@ -4,9 +4,9 @@ from card.card_data import Card
 from card.deck import Deck
 from enums.Tier import Tier
 from enums.TokenColor import TokenColor
+from game.game_state import GameState
 from json_requests.end_turn_request import EndTurnRequest, EndTurnRequestPayload
 from player.player import PlayerState
-from state.game_state import GameState
 
 
 class GameManager:
@@ -32,6 +32,8 @@ class GameManager:
         payload: EndTurnRequestPayload = end_turn_request.payload
         gold_token = payload.tokens[0]
         player_state.tokens[gold_token] += 1
+        # Remove 1 gold token from bank
+        game_state.deck.tokens[gold_token] -= 1
         # Reserve card
         player_state.reserved_cards.append(payload.reserved_card)
 
@@ -39,6 +41,8 @@ class GameManager:
         tokens_to_remove: List[TokenColor] = payload.tokens_returned
         for token_color in tokens_to_remove:
             player_state.tokens[token_color] -= 1
+            # Add token to bank
+            game_state.deck.tokens[token_color] += 1
 
     @staticmethod
     def buy_tokens(game_state: GameState, end_turn_request: EndTurnRequest):
@@ -49,11 +53,15 @@ class GameManager:
         tokens_to_buy: List[TokenColor] = payload.tokens_bought
         for token_color in tokens_to_buy:
             player_state.tokens[token_color] += 1
+            # Every token player buys needs to be removed from bank
+            game_state.deck.tokens[token_color] -= 1
 
         # Check if over 10 tokens, if so return some tokens
         tokens_to_remove: List[TokenColor] = payload.tokens_returned
         for token_color in tokens_to_remove:
             player_state.tokens[token_color] -= 1
+            # Add token to bank
+            game_state.deck.tokens[token_color] += 1
 
     @staticmethod
     def buy_3_different_tokens(game_state: GameState, end_turn_request: EndTurnRequest):

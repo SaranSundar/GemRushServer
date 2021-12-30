@@ -1,6 +1,5 @@
 import logging
 from datetime import datetime
-from enum import Enum
 from random import shuffle
 
 from flask import Flask, request, jsonify
@@ -8,18 +7,15 @@ from flask.json import JSONEncoder
 
 from card.deck import Deck
 from db.redis_app import get_redis_app, RedisPaths
-from enums.CardColor import CardColor
 from enums.EndTurnAction import EndTurnAction
-from enums.Tier import Tier
-from enums.TokenColor import TokenColor
 from json_requests.create_room_request import CreateRoomRequest
 from json_requests.end_turn_request import EndTurnRequest
 from json_requests.join_room_request import JoinRoomRequest
 from json_requests.start_game_request import StartGameRequest
 from player.player import PlayerState
 from room.room import Room
-from state.game_manager import GameManager
-from state.game_state import GameState
+from game.game_manager import GameManager
+from game.game_state import GameState
 from utils.utils import generate_uid
 
 
@@ -122,7 +118,8 @@ def start_game():
     room = get_room(start_game_request.room_id)
     deck = Deck(
         tiered_cards=Deck.load_card_data(),
-        noble_cards=Deck.load_nobles_data()
+        noble_cards=Deck.load_nobles_data(),
+        tokens=Deck.load_tokens()
     )
     deck.shuffle()
 
@@ -162,10 +159,10 @@ def validate_and_end_turn(end_turn_request: EndTurnRequest) -> GameState:
     game_state = get_game_state(end_turn_request.game_state_id)
     room: Room = get_room(end_turn_request.room_id)
     # TODO: Validate request
-    # Check that player id exists in room and game state
+    # Check that player id exists in room and game game
     # Check that it is this player ids turn
     # Check if the action they choose was a valid action
-    # Send back new game state with updated turn if action was valid
+    # Send back new game game with updated turn if action was valid
     if end_turn_request.action == EndTurnAction.BuyingCard:
         GameManager.buy_card(game_state, end_turn_request)
     elif end_turn_request.action == EndTurnAction.BuyingGoldToken:
@@ -205,7 +202,7 @@ def validate_and_end_turn(end_turn_request: EndTurnRequest) -> GameState:
 @app.route('/get-game-state/<game_state_id>', methods=['GET'])
 def get_game_state_json(game_state_id):
     game_state = get_game_state(game_state_id)
-    app.logger.debug('Game state value in get-game-state is')
+    app.logger.debug('Game game value in get-game-game is')
     app.logger.debug(game_state)
     result = jsonify(game_state)
     return result

@@ -8,7 +8,7 @@ from marshmallow_dataclass import dataclass as mmdc
 from card.deck import Deck
 from player.player import Player
 from room.room import Room
-from state.game_state import GameState
+from game.game_state import GameState
 from utils.utils import generate_uid
 
 
@@ -31,7 +31,8 @@ def get_response(method, url, body):
 def test_generating_game_state_json():
     deck = Deck(
         tiered_cards=Deck.load_card_data('.././assets/deck-data.json'),
-        noble_cards=Deck.load_nobles_data('.././assets/nobles-data.json')
+        noble_cards=Deck.load_nobles_data('.././assets/nobles-data.json'),
+        tokens=Deck.load_tokens()
     )
     time_game_started = datetime.utcnow()
     deck.shuffle()
