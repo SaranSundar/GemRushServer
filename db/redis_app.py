@@ -7,7 +7,7 @@ from marshmallow_dataclass import dataclass as mmdc
 # https://newbedev.com/error-99-connecting-to-localhost-6379-cannot-assign-requested-address
 # TODO: Make redis_host "redis" on prod build, and localhost on local development
 
-REDIS_HOST = "localhost"
+REDIS_HOST = "redis"
 REDIS_PORT = 6379
 
 
@@ -36,19 +36,18 @@ class RedisApp:
     def write(self, key, value, class_type=None):
         if class_type is None:
             self.redis_app.set(key, value)
-
-        print(class_type)
-        value_dump = value.Schema().dumps(value)
-        print(value_dump)
-        # value_dump = str(value_dump)
-        self.redis_app.set(key, value_dump)
-        return value_dump
+            return value
+        else:
+            value_dump = value.Schema().dumps(value)
+            self.redis_app.set(key, value_dump)
+            return value_dump
 
     def read(self, key, class_type=None):
         json_value = self.redis_app.get(key)
         if class_type is None:
             return json_value
-        return class_type.Schema().loads(json_value)
+        else:
+            return class_type.Schema().loads(json_value)
 
-    def incr(self, key):
-        self.redis_app.incr(key)
+    def exists(self, key):
+        return self.redis_app.exists(key)

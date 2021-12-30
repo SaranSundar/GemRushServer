@@ -31,24 +31,28 @@ class MyFlask(Flask):
 
 
 redis_app = get_redis_app()
-app = MyFlask(__name__)
+application = MyFlask(__name__)
 
 if __name__ != '__main__':
     # https://trstringer.com/logging-flask-gunicorn-the-manageable-way/
     gunicorn_logger = logging.getLogger('gunicorn.error')
-    app.logger.handlers = gunicorn_logger.handlers
-    app.logger.setLevel(gunicorn_logger.level)
+    application.logger.handlers = gunicorn_logger.handlers
+    application.logger.setLevel(gunicorn_logger.level)
 
 
-@app.route('/')
+@application.route('/')
 def hello():
     # application.logger.debug('this is a DEBUG message')
     # application.logger.info('this is an INFO message')
     # application.logger.warning('this is a WARNING message')
     # application.logger.error('this is an ERROR message')
     # application.logger.critical('this is a CRITICAL message')
-    redis_app.incr('hits')
-    return 'This Compose/Flask demo has been viewed %s time(s).' % redis_app.read('hits')
+    hits: int = 0
+    if redis_app.exists('hits'):
+        hits = int(redis_app.read('hits'))
+    hits += 1
+    redis_app.write('hits', hits)
+    return f'GemRush has been viewed {hits} times.'
 
 
 # Player 1 creates a room
@@ -71,22 +75,22 @@ def hello():
 
 # curl -X POST http://localhost:5000/create-room/abc -d @temp.json -H "Content-Type: application/json"
 # curl -X POST http://localhost:5000/create-room/test123
-@app.route('/create-room', methods=['POST'])
+@application.route('/create-room', methods=['POST'])
 def create_room():
     create_room_request = CreateRoomRequest(**request.json)
     room: Room = Room.request_to_dto(create_room_request)
-    app.logger.debug('Room value in create-room is')
-    app.logger.debug(room)
+    application.logger.debug('Room value in create-room is')
+    application.logger.debug(room)
     save_room(room)
     print(room.id)
     return jsonify(room)
 
 
-@app.route('/get-room/<room_id>', methods=['GET'])
+@application.route('/get-room/<room_id>', methods=['GET'])
 def get_room_json(room_id):
     room = get_room(room_id)
-    app.logger.debug('Room value in get-room is')
-    app.logger.debug(room)
+    application.logger.debug('Room value in get-room is')
+    application.logger.debug(room)
     return jsonify(room)
 
 
@@ -101,18 +105,18 @@ def get_room(room_id) -> Room:
     return room
 
 
-@app.route('/join-room/<room_id>', methods=['POST'])
+@application.route('/join-room/<room_id>', methods=['POST'])
 def join_room(room_id):
     join_room_request = JoinRoomRequest(**request.json)
     room = get_room(room_id)
     room.join(join_room_request.player_id, join_room_request.password)
-    app.logger.debug('Room value in join-room is')
-    app.logger.debug(room)
+    application.logger.debug('Room value in join-room is')
+    application.logger.debug(room)
     save_room(room)
     return jsonify(room)
 
 
-@app.route('/start-game', methods=['POST'])
+@application.route('/start-game', methods=['POST'])
 def start_game():
     start_game_request = StartGameRequest(**request.json)
     room = get_room(start_game_request.room_id)
@@ -147,7 +151,7 @@ def start_game():
     return jsonify(game_state)
 
 
-@app.route('/end-turn', methods=['POST'])
+@application.route('/end-turn', methods=['POST'])
 def end_turn():
     # end_turn_request = EndTurnRequest(**request.json)
     data = request.data
@@ -201,11 +205,11 @@ def validate_and_end_turn(end_turn_request: EndTurnRequest) -> GameState:
     return game_state
 
 
-@app.route('/get-game-state/<game_state_id>', methods=['GET'])
+@application.route('/get-game-state/<game_state_id>', methods=['GET'])
 def get_game_state_json(game_state_id):
     game_state = get_game_state(game_state_id)
-    app.logger.debug('Game game value in get-game-game is')
-    app.logger.debug(game_state)
+    application.logger.debug('Game game value in get-game-game is')
+    application.logger.debug(game_state)
     result = jsonify(game_state)
     return result
 
@@ -222,4 +226,4 @@ def get_game_state(game_state_id) -> GameState:
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True)
+    application.run(host="0.0.0.0", debug=True)
