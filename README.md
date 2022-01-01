@@ -23,3 +23,8 @@ Instructions to view server / health check
 ```
 visit http://0.0.0.0:9375/
 ```
+
+Instructions to destroy docker
+```
+docker system prune -a -f --volumes
+```
