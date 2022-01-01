@@ -28,3 +28,8 @@ Instructions to destroy docker
 ```
 docker system prune -a -f --volumes
 ```
+
+Instructions to clean start
+```
+docker-compose down && docker system prune -a -f --volumes && docker build -t compose-flask . && docker-compose up
+```
