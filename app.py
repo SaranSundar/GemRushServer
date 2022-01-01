@@ -123,7 +123,7 @@ def start_game():
     deck = Deck(
         tiered_cards=Deck.load_card_data(),
         noble_cards=Deck.load_nobles_data(),
-        tokens=Deck.load_tokens()
+        tokens=Deck.create_bank()
     )
     deck.create_board()
 

@@ -12,7 +12,7 @@ def test_generating_game_state_json():
     deck = Deck(
         tiered_cards=Deck.load_card_data('.././assets/deck-data.json'),
         noble_cards=Deck.load_nobles_data('.././assets/nobles-data.json'),
-        tokens=Deck.load_tokens()
+        tokens=Deck.create_bank()
     )
     time_game_started = datetime.utcnow()
     deck.create_board()

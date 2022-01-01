@@ -22,7 +22,8 @@ class Deck:
     board: Dict[Tier, List[Card]] = field(default_factory=lambda: {})
 
     @staticmethod
-    def load_tokens(num_of_tokens=7):
+    def create_bank(num_of_tokens=5):
+        # TODO: Make this come from create new room request
         tokens = {}
         for token_color in TokenColor:
             tokens[token_color] = num_of_tokens
