@@ -30,7 +30,7 @@ class GameManager:
         # Buy gold token
         player_state: PlayerState = game_state.player_states[end_turn_request.player_id]
         payload: EndTurnRequestPayload = end_turn_request.payload
-        gold_token = payload.tokens[0]
+        gold_token = payload.tokens_bought[0]
         player_state.tokens[gold_token] += 1
         # Remove 1 gold token from bank
         game_state.deck.bank[gold_token] -= 1
