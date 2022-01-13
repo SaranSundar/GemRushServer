@@ -155,6 +155,8 @@ def start_game():
 def end_turn():
     # end_turn_request = EndTurnRequest(**request.json)
     data = request.data
+    print("data is")
+    print(data)
     end_turn_request = EndTurnRequest.Schema().loads(data)
     game_state = validate_and_end_turn(end_turn_request)
     save_game_state(game_state)
