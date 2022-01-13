@@ -7,7 +7,7 @@ from marshmallow_dataclass import dataclass as mmdc
 # https://newbedev.com/error-99-connecting-to-localhost-6379-cannot-assign-requested-address
 # TODO: Make redis_host "redis" on prod build, and localhost on local development
 
-REDIS_HOST = "redis"
+REDIS_HOST = "localhost"
 REDIS_PORT = 6379
 
 

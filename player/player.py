@@ -18,6 +18,13 @@ class PlayerState:
     nobles: List[Noble]
 
     @staticmethod
+    def init_cards():
+        cards: Dict[CardColor, List[Card]] = {}
+        for card_color in CardColor:
+            cards[card_color] = []
+        return cards
+
+    @staticmethod
     def init_tokens():
         tokens: Dict[TokenColor, int] = {}
         for token_color in TokenColor:
