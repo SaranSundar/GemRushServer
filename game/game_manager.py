@@ -18,6 +18,12 @@ class GameManager:
         bought_card: Card = end_turn_request.payload.bought_card
         player_state.cards[bought_card.color].append(bought_card)
 
+        # Player returns tokens to bank to purchase card
+        returned_tokens: List[TokenColor] = end_turn_request.payload.tokens_returned
+        for token in returned_tokens:
+            player_state.tokens[token] -= 1
+            game_state.deck.bank[token] += 1
+
         # Deck draws new card to board
         deck: Deck = game_state.deck
         board: Dict[Tier, List[Card]] = deck.board

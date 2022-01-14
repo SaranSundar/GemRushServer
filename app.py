@@ -1,4 +1,5 @@
 import logging
+import ssl
 from datetime import datetime
 from random import shuffle
 
@@ -231,4 +232,6 @@ def get_game_state(game_state_id) -> GameState:
 
 
 if __name__ == '__main__':
-    application.run(host="0.0.0.0", debug=True)
+    ctx = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
+    ctx.load_cert_chain('sertnew/se-emulator.crt', 'sertnew/se-emulator.key')
+    application.run(host="0.0.0.0", debug=True, ssl_context=ctx)
