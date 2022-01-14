@@ -174,6 +174,8 @@ def validate_and_end_turn(end_turn_request: EndTurnRequest) -> GameState:
     # Send back new game game with updated turn if action was valid
     if end_turn_request.action == EndTurnAction.BuyingCard:
         GameManager.buy_card(game_state, end_turn_request)
+    elif end_turn_request.action == EndTurnAction.BuyingReservedCard:
+        GameManager.buy_reserved_card(game_state, end_turn_request)
     elif end_turn_request.action == EndTurnAction.BuyingGoldToken:
         GameManager.buy_gold_token_and_reserve_card(game_state, end_turn_request)
     elif end_turn_request.action == EndTurnAction.Buying3DifferentTokens:

@@ -51,6 +51,22 @@ class GameManager:
             game_state.deck.bank[token_color] += 1
 
     @staticmethod
+    def buy_reserved_card(game_state: GameState, end_turn_request: EndTurnRequest):
+        # Player adds card to hand
+        player_state: PlayerState = game_state.player_states[end_turn_request.player_id]
+        bought_card: Card = end_turn_request.payload.bought_card
+        player_state.cards[bought_card.color].append(bought_card)
+
+        # Player returns tokens to bank to purchase card
+        returned_tokens: List[TokenColor] = end_turn_request.payload.tokens_returned
+        for token in returned_tokens:
+            player_state.tokens[token] -= 1
+            game_state.deck.bank[token] += 1
+
+        # Remove bought card from players reserved cards
+        player_state.reserved_cards.remove(end_turn_request.payload.bought_card)
+
+    @staticmethod
     def buy_tokens(game_state: GameState, end_turn_request: EndTurnRequest):
         player_state: PlayerState = game_state.player_states[end_turn_request.player_id]
         payload: EndTurnRequestPayload = end_turn_request.payload
