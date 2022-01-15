@@ -95,6 +95,10 @@ class Deck:
             )
             noble_cards_list.append(noble)
 
+        shuffle(noble_cards_list)
+
+        noble_cards_list = noble_cards_list[0:3]
+
         return noble_cards_list
 
     def create_board(self):
@@ -107,7 +111,6 @@ class Deck:
     def shuffle(self):
         for tier, cards in self.tiered_cards.items():
             shuffle(cards)
-        shuffle(self.noble_cards)
 
     def draw(self, tier: Tier):
         # Place card on board if tiered list is not empty
