@@ -203,7 +203,18 @@ def validate_and_end_turn(end_turn_request: EndTurnRequest) -> GameState:
         winning_players = sorted(winning_players, key=lambda wp: (wp[0], -wp[1]))
 
         if winning_players:
-            game_state.winners = list(filter(lambda x: x == winning_players[0], winning_players))
+            max_score = 0
+            for wp in winning_players:
+                max_score = max(max_score, wp[0])
+            least_cards = 100
+            winner = None
+            for wp in winning_players:
+                if wp[0] == max_score:
+                    # Possible winner
+                    if wp[1] < least_cards:
+                        least_cards = wp[1]
+                        winner = wp
+            game_state.winners = [winner]
 
     # Go to next players turn
     game_state.turn_number += 1
