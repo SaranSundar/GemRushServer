@@ -214,7 +214,7 @@ def validate_and_end_turn(end_turn_request: EndTurnRequest) -> GameState:
                     if wp[1] < least_cards:
                         least_cards = wp[1]
                         winner = wp
-            game_state.winners = [winner]
+            game_state.winners = [winner[2]]
 
     # Go to next players turn
     game_state.turn_number += 1
