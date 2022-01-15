@@ -43,6 +43,13 @@ class GameManager:
         # Reserve card
         player_state.reserved_cards.append(payload.reserved_card)
 
+        # Deck draws new card to board
+        deck: Deck = game_state.deck
+        board: Dict[Tier, List[Card]] = deck.board
+        tiered_cards_on_board: List[Card] = board[payload.reserved_card.tier]
+        tiered_cards_on_board.remove(payload.reserved_card)
+        deck.draw(payload.reserved_card.tier)
+
         # Check if over 10 tokens, if so return some tokens
         tokens_to_remove: List[TokenColor] = payload.tokens_returned
         for token_color in tokens_to_remove:
