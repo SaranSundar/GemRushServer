@@ -43,6 +43,11 @@ class Room:
 
     def join(self, player_id: str, password: str):
         assert password == self.password, 'Incorrect password to join the room'
-        assert len(self.players) <= self.max_players - 1, 'Maximum player reached'
+        assert len(self.players) <= self.max_players - 1, 'Maximum players reached'
+
+        # Don't re-add same player to room if player disconnects and rejoins
+        for player in self.players:
+            if player.id == player_id:
+                return
 
         self.players.append(Player(player_id))

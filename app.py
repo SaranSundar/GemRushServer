@@ -228,7 +228,7 @@ def validate_and_end_turn(end_turn_request: EndTurnRequest) -> GameState:
 def get_game_state_json(game_state_id):
     game_state = get_game_state(game_state_id)
     application.logger.debug('Game game value in get-game-game is')
-    application.logger.debug(game_state)
+    application.logger.debug(game_state.id)
     result = jsonify(game_state)
     return result
 
