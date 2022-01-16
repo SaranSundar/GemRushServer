@@ -10,7 +10,7 @@ class EndTurnAction(str, Enum):
     Buying2SameTokens = 'Buying2SameTokens'
     # When you can only buy 1 or 2 tokens because you have 8 or 9
     BuyingLimitedTokens = 'BuyingLimitedTokens'
-    SkipTurn = 'SkipTurn'
+    DiscardTokens = 'DiscardTokens'
 
     def __str__(self):
         return self.name

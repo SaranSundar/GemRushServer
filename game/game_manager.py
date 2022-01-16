@@ -1,3 +1,4 @@
+from random import shuffle
 from typing import Dict, List
 
 from card.card_data import Card
@@ -103,3 +104,16 @@ class GameManager:
     @staticmethod
     def buy_limited_tokens(game_state: GameState, end_turn_request: EndTurnRequest):
         GameManager.buy_tokens(game_state, end_turn_request)
+
+    @staticmethod
+    def discard_tokens(game_state: GameState, end_turn_request: EndTurnRequest):
+        player_state: PlayerState = game_state.player_states[end_turn_request.player_id]
+        random_keys = []
+        for token_color in player_state.tokens:
+            if player_state.tokens[token_color] > 0:
+                random_keys.append(token_color)
+        shuffle(random_keys)
+        if len(random_keys) > 3:
+            random_keys = random_keys[0:3]
+        for key in random_keys:
+            player_state.tokens[key] -= 1

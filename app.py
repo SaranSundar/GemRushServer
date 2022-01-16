@@ -184,8 +184,8 @@ def validate_and_end_turn(end_turn_request: EndTurnRequest) -> GameState:
         GameManager.buy_2_same_tokens(game_state, end_turn_request)
     elif end_turn_request.action == EndTurnAction.BuyingLimitedTokens:
         GameManager.buy_limited_tokens(game_state, end_turn_request)
-    elif end_turn_request.action == EndTurnAction.SkipTurn:
-        pass
+    elif end_turn_request.action == EndTurnAction.DiscardTokens:
+        GameManager.discard_tokens(game_state, end_turn_request)
 
     # At any turn a player can choose to buy a noble if they meet the requirements
     if end_turn_request.payload.bought_noble:
