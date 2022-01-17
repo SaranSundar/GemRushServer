@@ -4,8 +4,6 @@ services:
   flask:
     build: .
     container_name: flask
-    ports:
-      - "9378"
     volumes:
       - .:/app
     depends_on:
@@ -14,5 +12,3 @@ services:
   redis:
     image: "redis:6.2-alpine"
     container_name: redis
-    ports:
-      - "6379"
