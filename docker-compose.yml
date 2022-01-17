@@ -12,3 +12,11 @@ services:
   redis:
     image: "redis:6.2-alpine"
     container_name: redis
+
+  nginx-proxy:
+    image: "nginx"
+    volumes:
+      - /root/nginx_conf/:/etc/nginx/conf.d
+      - /root/nginx_cert:/etc/nginx/nginx_cert
+    ports:
+      - "443:443"
