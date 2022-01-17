@@ -31,5 +31,5 @@ docker system prune -a -f --volumes
 
 Instructions to clean start
 ```
-docker-compose down && docker rm -f $(docker ps -a -q) && docker volume rm $(docker volume ls -q) && docker build -t compose-flask . && docker-compose up
+docker-compose down && docker system prune -a -f --volumes && docker build -t compose-flask . && docker-compose up
 ```
