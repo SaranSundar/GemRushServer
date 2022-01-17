@@ -5,7 +5,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(207.246.122.46.vultr.com)
+domains=(207.246.122.46)
 rsa_key_size=4096
 data_path="./data/certbot"
 email="saran@nilal.com" # Adding a valid address is strongly recommended
