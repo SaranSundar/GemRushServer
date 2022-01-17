@@ -20,3 +20,5 @@ services:
       - /root/nginx_cert:/etc/nginx/nginx_cert
     ports:
       - "443:443"
+    links:
+      - "flask:flask"
