@@ -13,12 +13,22 @@ services:
     image: "redis:6.2-alpine"
     container_name: redis
 
-  nginx-proxy:
-    image: "nginx"
+  nginx:
+    image: "nginx:alpine"
     volumes:
-      - /root/nginx_conf/:/etc/nginx/conf.d
-      - /root/nginx_cert:/etc/nginx/nginx_cert
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
     ports:
       - "443:443"
+      - - "80:80"
     links:
       - "flask:flask"
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
