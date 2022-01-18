@@ -4,6 +4,7 @@ from random import shuffle
 
 from flask import Flask, request, jsonify
 from flask.json import JSONEncoder
+from flask_cors import CORS
 
 from card.deck import Deck
 from db.redis_app import get_redis_app, RedisPaths
@@ -16,8 +17,7 @@ from json_requests.join_room_request import JoinRoomRequest
 from json_requests.start_game_request import StartGameRequest
 from player.player import PlayerState
 from room.room import Room
-from utils.utils import generate_uid
-from flask_cors import CORS
+from utils.utils import generate_uid, get_room
 
 
 class MyJSONEncoder(JSONEncoder):
@@ -102,12 +102,6 @@ def get_room_json(room_id):
 def save_room(room: Room):
     key = RedisPaths.create_key([RedisPaths.ROOMS, room.id])
     redis_app.write(key, room, class_type=Room)
-
-
-def get_room(room_id) -> Room:
-    key = RedisPaths.create_key([RedisPaths.ROOMS, room_id])
-    room = redis_app.read(key, class_type=Room)
-    return room
 
 
 @application.route('/join-room/<room_id>', methods=['POST'])
