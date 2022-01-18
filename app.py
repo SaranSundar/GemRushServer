@@ -18,6 +18,7 @@ from json_requests.start_game_request import StartGameRequest
 from player.player import PlayerState
 from room.room import Room
 from utils.utils import generate_uid
+from flask_cors import CORS, cross_origin
 
 
 class MyJSONEncoder(JSONEncoder):
@@ -33,12 +34,16 @@ class MyFlask(Flask):
 
 redis_app = get_redis_app()
 application = MyFlask(__name__)
+application.config['SECRET_KEY'] = "I am a very interesting pokemon called pikachu"
+application.config['CORS_HEADER'] = "Content-Type"
+cors = CORS(application)
 
 if __name__ != '__main__':
     # https://trstringer.com/logging-flask-gunicorn-the-manageable-way/
     gunicorn_logger = logging.getLogger('gunicorn.error')
     application.logger.handlers = gunicorn_logger.handlers
     application.logger.setLevel(gunicorn_logger.level)
+    logging.getLogger('flask_cors').level = logging.DEBUG
 
 
 @application.route('/')
