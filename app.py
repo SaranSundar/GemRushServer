@@ -1,4 +1,5 @@
 import logging
+import random
 from datetime import datetime
 from random import shuffle
 
@@ -17,7 +18,7 @@ from json_requests.join_room_request import JoinRoomRequest
 from json_requests.start_game_request import StartGameRequest
 from player.player import PlayerState
 from room.room import Room
-from utils.utils import generate_uid, get_room
+from utils.utils import generate_uid, load_words
 
 
 class MyJSONEncoder(JSONEncoder):
@@ -30,6 +31,8 @@ class MyJSONEncoder(JSONEncoder):
 class MyFlask(Flask):
     json_encoder = MyJSONEncoder
 
+
+words = load_words()
 
 redis_app = get_redis_app()
 application = MyFlask(__name__)
@@ -83,7 +86,8 @@ def hello():
 @application.route('/create-room', methods=['POST'])
 def create_room():
     create_room_request = CreateRoomRequest(**request.json)
-    room: Room = Room.request_to_dto(create_room_request)
+    room_code = generate_room_code()
+    room: Room = Room.request_to_dto(create_room_request, room_code)
     application.logger.debug('Room value in create-room is')
     application.logger.debug(room)
     save_room(room)
@@ -102,6 +106,20 @@ def get_room_json(room_id):
 def save_room(room: Room):
     key = RedisPaths.create_key([RedisPaths.ROOMS, room.id])
     redis_app.write(key, room, class_type=Room)
+
+
+def get_room(room_id) -> Room:
+    key = RedisPaths.create_key([RedisPaths.ROOMS, room_id])
+    room = redis_app.read(key, class_type=Room)
+    return room
+
+
+def generate_room_code():
+    room_code = " ".join(random.sample(words, 3))
+    # Keep looping until we find room code that doesn't exist already
+    while get_room("test") is not None:
+        room_code = " ".join(random.sample(words, 3))
+    return room_code
 
 
 @application.route('/join-room/<room_id>', methods=['POST'])

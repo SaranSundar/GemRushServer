@@ -6,7 +6,6 @@ from marshmallow_dataclass import dataclass as mmdc
 
 from json_requests.create_room_request import CreateRoomRequest
 from player.player import Player
-from utils.utils import generate_uid
 
 
 @mmdc
@@ -26,10 +25,10 @@ class Room:
     score_to_win: int
 
     @staticmethod
-    def request_to_dto(create_room_request: CreateRoomRequest):
+    def request_to_dto(create_room_request: CreateRoomRequest, room_code):
         owner = Player(create_room_request.creator_id)
         return Room(
-            id=generate_uid(),
+            id=room_code,
             name=create_room_request.name,
             password=create_room_request.password,
             min_players=create_room_request.min_players,
