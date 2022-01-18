@@ -45,9 +45,9 @@
       "cost": {
         "white": 0,
         "blue": 4,
-        "green": 4,
+        "green": 0,
         "red": 0,
-        "black": 0
+        "black": 4
       }
     },
     {

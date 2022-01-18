@@ -124,6 +124,7 @@ def generate_room_code():
 
 @application.route('/join-room/<room_id>', methods=['POST'])
 def join_room(room_id):
+    room_id = room_id.lower()
     join_room_request = JoinRoomRequest(**request.json)
     room = get_room(room_id)
     room.join(join_room_request.player_id, join_room_request.password)
