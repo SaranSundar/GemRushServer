@@ -44,6 +44,8 @@ class RedisApp:
 
     def read(self, key, class_type=None):
         json_value = self.redis_app.get(key)
+        if json_value is None:
+            return None
         if class_type is None:
             return json_value
         else:

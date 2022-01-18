@@ -117,7 +117,7 @@ def get_room(room_id) -> Room:
 def generate_room_code():
     room_code = " ".join(random.sample(words, 3))
     # Keep looping until we find room code that doesn't exist already
-    while get_room("test") is not None:
+    while get_room(room_code) is not None:
         room_code = " ".join(random.sample(words, 3))
     return room_code
 
