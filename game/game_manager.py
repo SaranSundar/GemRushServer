@@ -117,3 +117,4 @@ class GameManager:
             random_keys = random_keys[0:3]
         for key in random_keys:
             player_state.tokens[key] -= 1
+            game_state.deck.bank[key] += 1

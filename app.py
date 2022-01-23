@@ -127,11 +127,15 @@ def join_room(room_id):
     room_id = room_id.lower()
     join_room_request = JoinRoomRequest(**request.json)
     room = get_room(room_id)
-    room.join(join_room_request.player_id, join_room_request.password)
+    # Can't join game that's already started
+    joined_room = room.join(join_room_request.player_id, join_room_request.password)
     application.logger.debug('Room value in join-room is')
     application.logger.debug(room)
-    save_room(room)
-    return jsonify(room)
+    if joined_room:
+        save_room(room)
+        return jsonify(room)
+    else:
+        return jsonify(None)
 
 
 @application.route('/start-game', methods=['POST'])

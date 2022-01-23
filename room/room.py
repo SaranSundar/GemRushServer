@@ -45,8 +45,16 @@ class Room:
         assert len(self.players) <= self.max_players - 1, 'Maximum players reached'
 
         # Don't re-add same player to room if player disconnects and rejoins
+        player_found = False
         for player in self.players:
             if player.id == player_id:
-                return
+                player_found = True
+                break
 
-        self.players.append(Player(player_id))
+        if player_found is False:
+            # Only add player to room if game has not been started yet
+            if self.game_state_id == "" and len(self.game_state_id) == 0:
+                self.players.append(Player(player_id))
+                return True
+
+        return player_found
