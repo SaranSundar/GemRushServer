@@ -31,7 +31,6 @@ art
 ash
 ask
 asp
-ass
 ate
 ave
 awe
@@ -69,7 +68,6 @@ Bug
 bum
 bun
 bus
-but
 buy
 bye
 cab
@@ -95,7 +93,6 @@ coy
 cry
 cub
 cue
-cum
 cup
 cut
 dab
@@ -172,14 +169,12 @@ gag
 gal
 gap
 gas
-gay
 gee
 gel
 gem
 get
 gig
 gin
-god
 got
 gum
 gun
@@ -213,7 +208,6 @@ hum
 hut
 ice
 icy
-igg
 ill
 imp
 ink
@@ -226,7 +220,6 @@ jar
 jaw
 jay
 jet
-jew
 job
 joe
 jog
@@ -252,7 +245,6 @@ lea
 led
 Lee
 leg
-les
 let
 lib
 lid
