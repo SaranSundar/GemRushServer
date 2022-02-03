@@ -142,10 +142,11 @@ def join_room(room_id):
 def start_game():
     start_game_request = StartGameRequest(**request.json)
     room = get_room(start_game_request.room_id)
+    num_of_players = len(room.players)
     deck = Deck(
         tiered_cards=Deck.load_card_data(),
         noble_cards=Deck.load_nobles_data(),
-        bank=Deck.create_bank()
+        bank=Deck.create_bank(num_of_players=num_of_players)
     )
     deck.create_board()
 

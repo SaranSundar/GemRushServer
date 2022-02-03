@@ -22,11 +22,24 @@ class Deck:
     board: Dict[Tier, List[Card]] = field(default_factory=lambda: {})
 
     @staticmethod
-    def create_bank(num_of_tokens=5):
-        # TODO: Make this come from create new room request
+    def create_bank(num_of_players=2):
+        if num_of_players <= 2:
+            num_of_tokens = 4
+        elif num_of_players == 3:
+            num_of_tokens = 5
+        elif num_of_players == 4:
+            num_of_tokens = 7
+        else:
+            num_of_tokens = 10
         tokens = {}
         for token_color in TokenColor:
-            tokens[token_color] = num_of_tokens
+            if token_color == TokenColor.GOLD:
+                if num_of_players <= 4:
+                    tokens[token_color] = 5
+                else:
+                    tokens[token_color] = 7
+            else:
+                tokens[token_color] = num_of_tokens
         return tokens
 
     @staticmethod
