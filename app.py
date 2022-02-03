@@ -157,7 +157,8 @@ def start_game():
     for player in room.players:
         end_turn_starter = EndTurnRequest(room.id, game_state_id, player.id, EndTurnAction.StartGame,
                                           EndTurnRequestPayload())
-        player_to_state[player.id] = PlayerState(PlayerState.init_cards(), PlayerState.init_tokens(), [], [], None)
+        player_to_state[player.id] = PlayerState(PlayerState.init_cards(), PlayerState.init_tokens(), [], [],
+                                                 end_turn_starter)
 
     time_game_started = datetime.utcnow()
 
