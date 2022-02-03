@@ -7,6 +7,7 @@ from card.card_data import Card
 from card.noble import Noble
 from enums.CardColor import CardColor
 from enums.TokenColor import TokenColor
+from json_requests.end_turn_request import EndTurnRequest
 
 
 @mmdc
@@ -16,6 +17,7 @@ class PlayerState:
     tokens: Dict[TokenColor, int]
     reserved_cards: List[Card]
     nobles: List[Noble]
+    end_turn_request: EndTurnRequest
 
     @staticmethod
     def init_cards():

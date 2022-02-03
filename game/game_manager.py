@@ -16,6 +16,7 @@ class GameManager:
     def buy_card(game_state: GameState, end_turn_request: EndTurnRequest):
         # Player adds card to hand
         player_state: PlayerState = game_state.player_states[end_turn_request.player_id]
+        player_state.end_turn_request = end_turn_request
         bought_card: Card = end_turn_request.payload.bought_card
         player_state.cards[bought_card.color].append(bought_card)
 
@@ -36,6 +37,7 @@ class GameManager:
     def buy_gold_token_and_reserve_card(game_state: GameState, end_turn_request: EndTurnRequest):
         # Buy gold token
         player_state: PlayerState = game_state.player_states[end_turn_request.player_id]
+        player_state.end_turn_request = end_turn_request
         payload: EndTurnRequestPayload = end_turn_request.payload
         gold_token = payload.tokens_bought[0]
         player_state.tokens[gold_token] += 1
@@ -62,6 +64,7 @@ class GameManager:
     def buy_reserved_card(game_state: GameState, end_turn_request: EndTurnRequest):
         # Player adds card to hand
         player_state: PlayerState = game_state.player_states[end_turn_request.player_id]
+        player_state.end_turn_request = end_turn_request
         bought_card: Card = end_turn_request.payload.bought_card
         player_state.cards[bought_card.color].append(bought_card)
 
@@ -77,6 +80,7 @@ class GameManager:
     @staticmethod
     def buy_tokens(game_state: GameState, end_turn_request: EndTurnRequest):
         player_state: PlayerState = game_state.player_states[end_turn_request.player_id]
+        player_state.end_turn_request = end_turn_request
         payload: EndTurnRequestPayload = end_turn_request.payload
 
         # Buy tokens
@@ -108,6 +112,7 @@ class GameManager:
     @staticmethod
     def discard_tokens(game_state: GameState, end_turn_request: EndTurnRequest):
         player_state: PlayerState = game_state.player_states[end_turn_request.player_id]
+        player_state.end_turn_request = end_turn_request
         random_keys = []
         for token_color in player_state.tokens:
             if player_state.tokens[token_color] > 0:
