@@ -13,7 +13,7 @@ from enums.EndTurnAction import EndTurnAction
 from game.game_manager import GameManager
 from game.game_state import GameState
 from json_requests.create_room_request import CreateRoomRequest
-from json_requests.end_turn_request import EndTurnRequest
+from json_requests.end_turn_request import EndTurnRequest, EndTurnRequestPayload
 from json_requests.join_room_request import JoinRoomRequest
 from json_requests.start_game_request import StartGameRequest
 from player.player import PlayerState
@@ -152,14 +152,17 @@ def start_game():
 
     player_to_state = dict()
     shuffle(room.players)
+    game_state_id = generate_uid()
     # https://stackoverflow.com/questions/52390576/how-can-i-make-a-python-dataclass-hashable-without-making-them-immutable
     for player in room.players:
+        end_turn_starter = EndTurnRequest(room.id, game_state_id, player.id, EndTurnAction.StartGame,
+                                          EndTurnRequestPayload())
         player_to_state[player.id] = PlayerState(PlayerState.init_cards(), PlayerState.init_tokens(), [], [], None)
 
     time_game_started = datetime.utcnow()
 
     game_state = GameState(
-        id=generate_uid(),
+        id=game_state_id,
         player_states=player_to_state,
         deck=deck,
         turn_number=0,
